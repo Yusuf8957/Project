@@ -10,19 +10,30 @@ const { isLoggedIn, isReviewAuthor } = require("../middleware");
 // ================= ADD REVIEW =================
 router.post("/", isLoggedIn, async (req, res) => {
   try {
-    let listing = await Listing.findById(req.params.id);
+    let { id } = req.params;
 
+    let listing = await Listing.findById(id);
+
+    // 🔥 FIX: listing check
     if (!listing) {
       req.flash("error", "Listing not found!");
       return res.redirect("/listings");
     }
 
+    // 🔥 FIX: body check
     if (!req.body.review || !req.body.review.rating) {
       req.flash("error", "Rating required!");
-      return res.redirect(`/listings/${req.params.id}`);
+      return res.redirect(`/listings/${id}`);
     }
 
     let newReview = new Review(req.body.review);
+
+    // 🔥 FIX: user safety
+    if (!req.user) {
+      req.flash("error", "You must be logged in!");
+      return res.redirect("/login");
+    }
+
     newReview.author = req.user._id;
 
     await newReview.save();
@@ -34,9 +45,9 @@ router.post("/", isLoggedIn, async (req, res) => {
     return res.redirect(`/listings/${listing._id}`);
 
   } catch (err) {
-    console.log(err);
+    console.log("ADD REVIEW ERROR:", err);
     req.flash("error", "Something went wrong!");
-    return res.redirect("/listings"); // ✅ FIX
+    return res.redirect("/listings");
   }
 });
 
@@ -49,6 +60,13 @@ router.delete("/:reviewId",
     try {
       let { id, reviewId } = req.params;
 
+      // 🔥 FIX: listing existence check (optional but safe)
+      let listing = await Listing.findById(id);
+      if (!listing) {
+        req.flash("error", "Listing not found!");
+        return res.redirect("/listings");
+      }
+
       await Listing.findByIdAndUpdate(id, {
         $pull: { reviews: reviewId },
       });
@@ -59,9 +77,9 @@ router.delete("/:reviewId",
       return res.redirect(`/listings/${id}`);
 
     } catch (err) {
-      console.log(err);
+      console.log("DELETE REVIEW ERROR:", err);
       req.flash("error", "Delete failed!");
-      return res.redirect(`/listings/${req.params.id}`); // ✅ FIX
+      return res.redirect(`/listings/${req.params.id}`);
     }
   }
 );

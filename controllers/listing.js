@@ -130,6 +130,7 @@ module.exports.renderEditForm = async (req, res, next) => {
 
 
 // ================= UPDATE =================
+// ================= UPDATE =================
 module.exports.updateListing = async (req, res, next) => {
   try {
     let { id } = req.params;
@@ -176,6 +177,12 @@ module.exports.updateListing = async (req, res, next) => {
       ...req.body.listing,
       price: Number(req.body.listing.price),
     });
+
+    // 🔥 FIX: null check
+    if (!listing) {
+      req.flash("error", "Listing not found!");
+      return res.redirect("/listings");
+    }
 
     listing.geometry = {
       type: "Point",
