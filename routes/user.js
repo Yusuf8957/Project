@@ -4,13 +4,13 @@ const router = express.Router();
 const passport = require("passport");
 const User = require("../models/user");
 
-// 🔥 middleware
+// middleware
 const { saveRedirect } = require("../middleware");
 
 
 // ================= SIGNUP FORM =================
 router.get("/signup", (req, res) => {
-  res.render("users/signup.ejs");
+  return res.render("users/signup");
 });
 
 
@@ -20,25 +20,28 @@ router.post("/signup", async (req, res, next) => {
     let { username, email, password } = req.body;
 
     const newUser = new User({ username, email });
+
     const registeredUser = await User.register(newUser, password);
 
     req.login(registeredUser, (err) => {
-      if (err) return next(err);
+      if (err) {
+        return next(err);
+      }
 
       req.flash("success", "Welcome to Wanderlust!");
-      return res.redirect("/listings"); // ✅ FIXED
+      return res.redirect("/listings"); // ✅ IMPORTANT
     });
 
   } catch (e) {
     req.flash("error", e.message);
-    return res.redirect("/signup"); // ✅ FIXED
+    return res.redirect("/signup"); // ✅ IMPORTANT
   }
 });
 
 
 // ================= LOGIN FORM =================
 router.get("/login", (req, res) => {
-  res.render("users/login.ejs");
+  return res.render("users/login");
 });
 
 
@@ -57,7 +60,7 @@ router.post(
 
     delete req.session.redirectUrl;
 
-    return res.redirect(redirectUrl); // ✅ SAFE
+    return res.redirect(redirectUrl); // ✅ IMPORTANT
   }
 );
 
@@ -65,10 +68,12 @@ router.post(
 // ================= LOGOUT =================
 router.get("/logout", (req, res, next) => {
   req.logout((err) => {
-    if (err) return next(err);
+    if (err) {
+      return next(err);
+    }
 
     req.flash("success", "Logged out successfully!");
-    return res.redirect("/listings"); // ✅ SAFE
+    return res.redirect("/listings"); // ✅ IMPORTANT
   });
 });
 

@@ -10,48 +10,63 @@ const { storage } = require("../cloudConfig");
 const upload = multer({ storage });
 
 
-// 🔥 NEW ROUTE (controller use karo - better)
+// ================= NEW =================
+// ⚠️ IMPORTANT: "/new" must be ABOVE "/:id"
 router.get(
   "/new",
   isLoggedIn,
-  wrapAsync(listingController.renderNewForm)
+  wrapAsync(async (req, res) => {
+    return res.render("listings/new"); // ✅ direct render (safe)
+  })
 );
 
 
-// INDEX + CREATE
+// ================= INDEX + CREATE =================
 router.route("/")
-  .get(wrapAsync(listingController.index))
+  .get(wrapAsync(async (req, res) => {
+    return listingController.index(req, res);
+  }))
   .post(
     isLoggedIn,
     upload.single("listing[image]"),
     validateListing,
-    wrapAsync(listingController.createListing)
+    wrapAsync(async (req, res) => {
+      return listingController.createListing(req, res);
+    })
   );
 
 
-// SHOW + UPDATE + DELETE
+// ================= SHOW + UPDATE + DELETE =================
 router.route("/:id")
-  .get(wrapAsync(listingController.showListing))
+  .get(wrapAsync(async (req, res) => {
+    return listingController.showListing(req, res);
+  }))
   .put(
     isLoggedIn,
     isOwner,
     upload.single("listing[image]"),
     validateListing,
-    wrapAsync(listingController.updateListing)
+    wrapAsync(async (req, res) => {
+      return listingController.updateListing(req, res);
+    })
   )
   .delete(
     isLoggedIn,
     isOwner,
-    wrapAsync(listingController.deleteListing)
+    wrapAsync(async (req, res) => {
+      return listingController.deleteListing(req, res);
+    })
   );
 
 
-// EDIT
+// ================= EDIT =================
 router.get(
   "/:id/edit",
   isLoggedIn,
   isOwner,
-  wrapAsync(listingController.renderEditForm)
+  wrapAsync(async (req, res) => {
+    return listingController.renderEditForm(req, res);
+  })
 );
 
 module.exports = router;

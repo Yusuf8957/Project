@@ -1,35 +1,29 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- 🔥 TITLE FIXED -->
-    <title>Explore</title>
+    <!-- TITLE -->
+    <title>Wanderlust</title>
 
-    <!-- 🔥 FAVICON -->
-    <link rel="icon" type="image/png" href="/favicon.png">
-    <link rel="shortcut icon" href="/favicon.png">
+    <!-- FAVICON -->
+    <link rel="icon" href="/favicon.png">
 
-    <!-- Main CSS -->
+    <!-- CUSTOM CSS -->
     <link rel="stylesheet" href="/css/style.css"/>
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- ✅ FIXED BOOTSTRAP (WORKING VERSION) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Leaflet CSS -->
-    <link 
-      rel="stylesheet" 
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans&display=swap" rel="stylesheet">
 
     <!-- Rating CSS -->
     <link href="/css/rating.css" rel="stylesheet"/>
@@ -37,31 +31,31 @@
 
 <body>
 
-   <%- include("../includes/navbar.ejs")%>
+    <!-- NAVBAR -->
+    <%- include("../includes/navbar.ejs") %>
 
-   <div class="container mt-3">
+    <div class="container mt-3">
 
-      <!-- Flash Messages -->
-      <%- include("../includes/flash.ejs") %>
+        <!-- FLASH -->
+        <%- include("../includes/flash.ejs") %>
 
-      <!-- Page Content -->
-      <%- body %>
+        <!-- 🔥 MAIN CONTENT -->
+        <%- body %>
 
-   </div>
+    </div>
 
-   <%- include("../includes/footer.ejs")%>
+    <!-- FOOTER -->
+    <%- include("../includes/footer.ejs") %>
 
-   <!-- Bootstrap JS -->
-   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- ✅ FIXED BOOTSTRAP JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-   <!-- Leaflet JS -->
-   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-   <!-- Custom JS -->
-   <script src="/js/script.js"></script>
-
-   <!-- Dark Mode -->
-   <script src="/js/darkMode.js"></script>
+    <!-- Custom JS -->
+    <script src="/js/script.js"></script>
+    <script src="/js/darkMode.js"></script>
 
 </body>
 </html>

@@ -1,52 +1,94 @@
-<% layout("/layouts/boilerplate")%>
-   
-<div class="row mt-3">
-<div class="col-8 offset-2">
-  <br/><br/>
-  <h3>Create a New Listing</h3>
+<%- layout("layouts/boilerplate") %>
 
-  <form method="POST" action="/listings" novalidate class="needs-validation" enctype="multipart/form-data">
-        
-    <div class="mb-3">
-      <label class="form-label"> Title </label>
-      <input name="listing[title]" placeholder="Add a catchy title" type="text" class="form-control" required/>
-      <div class="valid-feedback">Title looks good!</div>
-    </div>
-     
-    <div class="mb-3"> 
-      <label class="form-label"> Description </label>
-      <textarea name="listing[description]" placeholder="enter description" class="form-control" required></textarea>
-      <div class="invalid-feedback">Please enter a short description</div>
-    </div>
-       
-    <!-- ✅ FIX HERE -->
-    <div class="mb-3">
-      <label class="form-label"> Upload Listing Image </label>
-      <input name="listing[image]" type="file" class="form-control" required/>
-    </div>
-     
-    <div class="row">
-      <div class="mb-3 col-md-4">
-        <label class="form-label"> Price </label>
-        <input type="number" name="listing[price]" placeholder="1200" class="form-control" required/>
-        <div class="invalid-feedback">Price should be valid</div>
+<div class="row mt-4">
+  <div class="col-md-8 offset-md-2">
+
+    <h3 class="mb-4">Create a New Listing</h3>
+
+    <form 
+      method="POST" 
+      action="/listings" 
+      enctype="multipart/form-data"
+      class="needs-validation"
+      novalidate
+    >
+
+      <!-- TITLE -->
+      <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input 
+          name="listing[title]" 
+          type="text"
+          class="form-control"
+          placeholder="Add a catchy title"
+          required
+        />
       </div>
-               
-      <div class="mb-3 col-md-8">
-        <label class="form-label"> Country </label>
-        <input name="listing[country]" placeholder="India" type="text" class="form-control" required/>
-        <div class="invalid-feedback">Country name should be valid</div>
+
+      <!-- DESCRIPTION -->
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea 
+          name="listing[description]" 
+          class="form-control"
+          rows="3"
+          placeholder="Enter description"
+          required
+        ></textarea>
       </div>
-    </div>
-        
-    <div class="mb-3">
-      <label class="form-label"> Location </label>
-      <input name="listing[location]" placeholder="Jaipur,Rajasthan" type="text" class="form-control" required/>
-      <div class="invalid-feedback">Location should be valid</div>
-    </div>
-                
-    <button class="btn btn-dark add-btn mt-3">Add</button>
-      
-  </form>
-</div>
+
+      <!-- IMAGE -->
+      <div class="mb-3">
+        <label class="form-label">Upload Listing Image</label>
+        <input 
+          type="file" 
+          name="listing[image]" 
+          class="form-control"
+          required
+        />
+      </div>
+
+      <!-- PRICE + COUNTRY -->
+      <div class="row">
+        <div class="mb-3 col-md-6">
+          <label class="form-label">Price</label>
+          <input 
+            type="number" 
+            name="listing[price]" 
+            class="form-control"
+            placeholder="1200"
+            required
+          />
+        </div>
+
+        <div class="mb-3 col-md-6">
+          <label class="form-label">Country</label>
+          <input 
+            name="listing[country]" 
+            class="form-control"
+            placeholder="India"
+            required
+          />
+        </div>
+      </div>
+
+      <!-- LOCATION -->
+      <div class="mb-3">
+        <label class="form-label">Location</label>
+        <input 
+          name="listing[location]" 
+          class="form-control"
+          placeholder="Jaipur, Rajasthan"
+          required
+        />
+      </div>
+
+      <!-- BUTTON -->
+      <button class="btn btn-danger">
+        Add
+      </button>
+
+    </form>
+
+  </div>
 </div>

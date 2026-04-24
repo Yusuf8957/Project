@@ -9,7 +9,7 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 
 const listingsRouter = require("./routes/listing.js");
-const reviewRouter = require("./routes/review.js");
+const reviewRouter = require("./routes/review.js"); // ✅ ADD THIS
 const userRouter = require("./routes/user.js");
 
 const passport = require("passport");
@@ -20,47 +20,29 @@ const ExpressError = require("./utils/ExpressError.js");
 const session = require("express-session");
 const flash = require("connect-flash");
 
-const dbUrl = process.env.ATLASDB_URL;
-
-
-// ================= DB CONNECT =================
-mongoose.connect(dbUrl)
+// ================= DB =================
+mongoose.connect(process.env.ATLASDB_URL)
   .then(() => console.log("connected to DB"))
-  .catch((err) => console.log(err));
+  .catch(err => console.log(err));
 
-
-// ================= VIEW ENGINE =================
+// ================= VIEW =================
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.engine("ejs", ejsMate);
 
-
 // ================= MIDDLEWARE =================
-
-// static
 app.use(express.static(path.join(__dirname, "public")));
-
-// uploads
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
-
 // ================= SESSION =================
-const sessionOptions = {
+app.use(session({
   secret: process.env.SECRET,
   resave: false,
   saveUninitialized: true,
-  cookie: {
-    httpOnly: true,
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  },
-};
+}));
 
-app.use(session(sessionOptions));
 app.use(flash());
-
 
 // ================= PASSPORT =================
 app.use(passport.initialize());
@@ -70,7 +52,6 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-
 // ================= LOCALS =================
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
@@ -79,37 +60,28 @@ app.use((req, res, next) => {
   next();
 });
 
-
 // ================= ROUTES =================
-
-// 🔥 UPTIME ROUTE (FIXED)
-app.get("/ping", (req, res) => {
-  return res.send("OK");
+app.get("/", (req, res) => {
+  return res.redirect("/listings");
 });
 
+// 🔥 IMPORTANT ORDER
+app.use("/listings/:id/reviews", reviewRouter); // ✅ ADD THIS
 app.use("/listings", listingsRouter);
-app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
 
-
-// ================= ERROR HANDLING =================
-
-// 404
-app.use((req, res, next) => {
-  next(new ExpressError(404, "Page Not Found!"));
-});
-
-// global error
+// ================= ERROR =================
 app.use((err, req, res, next) => {
+  console.log("ERROR:", err);
+
   if (res.headersSent) {
     return next(err);
   }
-  let { statusCode = 500, message = "Something went wrong!" } = err;
-  res.status(statusCode).render("error.ejs", { message });
-});
 
+  res.status(err.statusCode || 500).send(err.message || "Something went wrong");
+});
 
 // ================= SERVER =================
 app.listen(8080, () => {
-  console.log("server is listening to port 8080");
+  console.log("server running on port 8080");
 });

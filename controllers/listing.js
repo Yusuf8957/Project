@@ -47,6 +47,17 @@ module.exports.showListing = async (req, res, next) => {
 // ================= CREATE =================
 module.exports.createListing = async (req, res, next) => {
   try {
+    if (!req.body.listing) {
+      req.flash("error", "Invalid form data!");
+      return res.redirect("/listings/new");
+    }
+
+    // ❗ SAFETY: user check
+    if (!req.user) {
+      req.flash("error", "You must be logged in!");
+      return res.redirect("/login");
+    }
+
     const location = req.body.listing.location;
 
     const response = await fetch(
@@ -63,7 +74,7 @@ module.exports.createListing = async (req, res, next) => {
       return res.redirect("/listings/new");
     }
 
-    if (!data.features || !data.features.length) {
+    if (!data.features || data.features.length === 0) {
       req.flash("error", "Invalid location!");
       return res.redirect("/listings/new");
     }
@@ -73,7 +84,7 @@ module.exports.createListing = async (req, res, next) => {
     const newListing = new Listing({
       ...req.body.listing,
       price: Number(req.body.listing.price),
-      owner: req.user._id,
+      owner: req.user._id, // ✅ FIXED
       geometry: {
         type: "Point",
         coordinates: coords,
@@ -93,6 +104,7 @@ module.exports.createListing = async (req, res, next) => {
     return res.redirect(`/listings/${newListing._id}`);
 
   } catch (err) {
+    console.log("CREATE ERROR:", err);
     return next(err);
   }
 };
@@ -121,6 +133,12 @@ module.exports.renderEditForm = async (req, res, next) => {
 module.exports.updateListing = async (req, res, next) => {
   try {
     let { id } = req.params;
+
+    if (!req.body.listing) {
+      req.flash("error", "Invalid form data!");
+      return res.redirect(`/listings/${id}/edit`);
+    }
+
     let { title, price } = req.body.listing;
 
     if (!title || title.trim().length < 3) {
@@ -147,7 +165,7 @@ module.exports.updateListing = async (req, res, next) => {
       return res.redirect(`/listings/${id}/edit`);
     }
 
-    if (!data.features || !data.features.length) {
+    if (!data.features || data.features.length === 0) {
       req.flash("error", "Invalid location!");
       return res.redirect(`/listings/${id}/edit`);
     }
@@ -177,6 +195,7 @@ module.exports.updateListing = async (req, res, next) => {
     return res.redirect(`/listings/${id}`);
 
   } catch (err) {
+    console.log("UPDATE ERROR:", err);
     return next(err);
   }
 };
