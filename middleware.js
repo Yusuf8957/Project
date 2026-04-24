@@ -6,10 +6,7 @@ const ExpressError = require("./utils/ExpressError");
 // ================= LOGIN CHECK =================
 module.exports.isLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) {
-
-    // ✅ FIX: always save original URL
     req.session.redirectUrl = req.originalUrl;
-
     req.flash("error", "You must be logged in!");
     return res.redirect("/login");
   }
@@ -21,7 +18,7 @@ module.exports.isLoggedIn = (req, res, next) => {
 module.exports.saveRedirect = (req, res, next) => {
   if (req.session.redirectUrl) {
     res.locals.redirectUrl = req.session.redirectUrl;
-    delete req.session.redirectUrl; // ✅ clean after use
+    delete req.session.redirectUrl;
   }
   next();
 };
@@ -72,7 +69,6 @@ module.exports.validateListing = (req, res, next) => {
     throw new ExpressError(400, "Valid price is required");
   }
 
-  // ✅ ONLY require image during CREATE
   if (req.method === "POST" && !req.file) {
     throw new ExpressError(400, "Image is required");
   }

@@ -48,9 +48,8 @@ app.use(methodOverride("_method"));
 
 
 // ================= SESSION =================
-
 const sessionOptions = {
-  secret: process.env.SECRET, // ✅ env se le raha hai
+  secret: process.env.SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -83,14 +82,10 @@ app.use((req, res, next) => {
 
 // ================= ROUTES =================
 
-// ================= ROUTES =================
-
-// 🔥 UPTIME ROUTE (ADD THIS)
+// 🔥 UPTIME ROUTE (FIXED)
 app.get("/ping", (req, res) => {
-  res.send("OK");
+  return res.send("OK");
 });
-
-
 
 app.use("/listings", listingsRouter);
 app.use("/listings/:id/reviews", reviewRouter);

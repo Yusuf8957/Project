@@ -20,20 +20,18 @@ router.post("/signup", async (req, res, next) => {
     let { username, email, password } = req.body;
 
     const newUser = new User({ username, email });
-
     const registeredUser = await User.register(newUser, password);
 
     req.login(registeredUser, (err) => {
-      if (err) {
-        return next(err);
-      }
+      if (err) return next(err);
+
       req.flash("success", "Welcome to Wanderlust!");
-      res.redirect("/listings");
+      return res.redirect("/listings"); // ✅ FIXED
     });
 
   } catch (e) {
     req.flash("error", e.message);
-    res.redirect("/signup");
+    return res.redirect("/signup"); // ✅ FIXED
   }
 });
 
@@ -47,7 +45,7 @@ router.get("/login", (req, res) => {
 // ================= LOGIN =================
 router.post(
   "/login",
-  saveRedirect,   // 🔥 important
+  saveRedirect,
   passport.authenticate("local", {
     failureRedirect: "/login",
     failureFlash: true,
@@ -55,13 +53,11 @@ router.post(
   (req, res) => {
     req.flash("success", "Welcome back!");
 
-    // ✅ SMART REDIRECT FIX
     let redirectUrl = res.locals.redirectUrl || "/listings";
 
-    // 🔥 optional (clean session)
     delete req.session.redirectUrl;
 
-    res.redirect(redirectUrl);
+    return res.redirect(redirectUrl); // ✅ SAFE
   }
 );
 
@@ -69,11 +65,10 @@ router.post(
 // ================= LOGOUT =================
 router.get("/logout", (req, res, next) => {
   req.logout((err) => {
-    if (err) {
-      return next(err);
-    }
+    if (err) return next(err);
+
     req.flash("success", "Logged out successfully!");
-    res.redirect("/listings");
+    return res.redirect("/listings"); // ✅ SAFE
   });
 });
 

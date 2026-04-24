@@ -48,7 +48,7 @@ body.dark-mode .navbar-brand img {
     <!-- 🔥 LEFT SIDE -->
     <div class="d-flex align-items-center gap-3">
 
-      <!-- ✅ ONLY LOGO (TEXT REMOVED) -->
+      <!-- LOGO -->
       <a class="navbar-brand d-flex align-items-center" href="/listings">
         <img src="/logo.png" alt="logo" class="me-2">
       </a>
@@ -78,14 +78,15 @@ body.dark-mode .navbar-brand img {
     <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
       <div class="navbar-nav">
 
-        <a class="nav-link" href="/listings/new">Airbnb your home</a>
-
         <% if(!currUser){ %>
+          <!-- NOT LOGGED IN -->
           <a class="nav-link" href="/signup"><b>Sign up</b></a>
           <a class="nav-link" href="/login"><b>Log in</b></a>
         <% } %>
 
         <% if(currUser){ %>
+          <!-- LOGGED IN -->
+          <a class="nav-link" href="/listings/new">Airbnb your home</a>
           <a class="nav-link" href="/logout"><b>Log out</b></a>
         <% } %>
 
