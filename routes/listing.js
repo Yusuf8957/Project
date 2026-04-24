@@ -10,10 +10,12 @@ const { storage } = require("../cloudConfig");
 const upload = multer({ storage });
 
 
-// 🔥 VERY IMPORTANT: NEW ROUTE TOP PE
-router.get("/new", isLoggedIn, (req, res) => {
-  return res.render("listings/new");
-});
+// 🔥 NEW ROUTE (controller use karo - better)
+router.get(
+  "/new",
+  isLoggedIn,
+  wrapAsync(listingController.renderNewForm)
+);
 
 
 // INDEX + CREATE
@@ -45,7 +47,8 @@ router.route("/:id")
 
 
 // EDIT
-router.get("/:id/edit",
+router.get(
+  "/:id/edit",
   isLoggedIn,
   isOwner,
   wrapAsync(listingController.renderEditForm)
