@@ -1,4 +1,4 @@
-
+/* ================= GLOBAL ================= */
 body {
   font-family: "Plus Jakarta Sans", sans-serif !important;
   display: flex;
@@ -6,235 +6,201 @@ body {
   min-height: 100vh;
 }
 
-.container{
-    flex: 1;
+.container {
+  flex: 1;
 }
 
+/* ================= NAVBAR ================= */
 .navbar {
-height: 5rem;
-background-color: white;
+  height: 5rem;
+  background-color: white;
 }
 
-.fa-compass{
-    color:#fe424d;
-    font-size: 2rem;
+.fa-compass {
+  color: #fe424d;
+  font-size: 2rem;
 }
 
-.nav-link{
-    color: #222222 !important;
+.nav-link {
+  color: #222222 !important;
 }
 
-.f-info-links a{
-    text-decoration: none;
-    color: #222222;
+/* ================= FOOTER ================= */
+.f-info-links a {
+  text-decoration: none;
+  color: #222222;
 }
 
-.f-info-links a:hover{
-    text-decoration: underline;
+.f-info-links a:hover {
+  text-decoration: underline;
 }
 
-.f-info-links ,.f-info-socials, .f-info-brand{
-    width: 100%;
-   display: flex;
-   align-items: center;
-   justify-content: center;
+.f-info-links,
+.f-info-socials,
+.f-info-brand {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-
-
-
-.f-info{
-    text-align: center;
-    height: 8rem;
-    background-color: #ebebeb;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: space-evenly;
+.f-info {
+  text-align: center;
+  height: 8rem;
+  background-color: #ebebeb;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: space-evenly;
 }
 
-
-/* Cards */
-.listing-card{
-    border: none !important;
-    margin-bottom: 2rem;
-
+/* ================= CARDS ================= */
+.listing-card {
+  border: none !important;
+  margin-bottom: 2rem;
 }
 
-.card-img-top{
-    border-radius: 1rem !important;
-    width: 100% !important;
-    object-fit: cover !important;
+.card-img-top {
+  border-radius: 1rem !important;
+  width: 100% !important;
+  object-fit: cover !important;
 }
 
-.card-body{
-    padding: 0 !important;
-
+.card-body {
+  padding: 0 !important;
 }
 
-
-.card-text p{
-    font-weight: 400 !important;
+.card-text p {
+  font-weight: 400 !important;
 }
 
-
-.listing-link{
-    text-decoration: none;
+.listing-link {
+  text-decoration: none;
 }
 
-
-/* Card Effect */
-.card-img-overlay{
-    opacity: 0;
+/* Hover Effect */
+.card-img-overlay {
+  opacity: 0;
 }
 
-.card-img-overlay:hover{
-    opacity: 0.2;
-    background-color: white;
+.card-img-overlay:hover {
+  opacity: 0.2;
+  background-color: white;
 }
 
-/* New Page */
-.add-btn{
-    background-color: #fe424d !important;
-    border: none !important;
+/* ================= BUTTONS ================= */
+.add-btn,
+.edit-btn {
+  background-color: #fe424d !important;
+  border: none !important;
 }
 
-/* Edit Page */
-.edit-btn{
-     background-color: #fe424d !important;
-    border: none !important;
+/* ================= SHOW PAGE ================= */
+.show-img {
+  height: 30vh;
 }
 
-/* Show Page */
-.show-img{
-    height: 30vh;
+.btns {
+  display: flex;
 }
 
-.btns{
-    display: flex;
+.show-card {
+  padding-left: 0;
+  padding-right: 0;
 }
 
-.show-card{
-    padding-left: 0;
-    padding-right: 0;
-}
+/* ================= ALERT ================= */
 .alert {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: auto;
-    max-width: 300px;
-    z-index: 9999;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  max-width: 300px;
+  z-index: 9999;
 }
 
+/* ================= MAP ================= */
 #map {
-  height: 400px;         
+  height: 400px;
   width: 100%;
   border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
-
+/* ================= DARK MODE TOGGLE ================= */
 #darkModeToggle {
   font-size: 18px;
   cursor: pointer;
-  transition: 0.2s;
 }
 
-
+/* ================= 🌙 DARK MODE ================= */
 body.dark-mode {
-  background-color: #1e1e1e;
+  background-color: #121212;
   color: #e0e0e0;
 }
 
-.dark-mode .navbar {
-  background-color: #2a2a2a;
-}
-
-/* 🌙 GLOBAL DARK MODE */
-body.dark-mode {
-  background-color: #1e1e1e;
-  color: #e0e0e0;
-}
-
-/* 🔥 NAVBAR */
-.dark-mode .navbar {
+/* NAVBAR */
+body.dark-mode .navbar {
   background-color: #2a2a2a !important;
   border-bottom: 1px solid #444;
 }
 
-.dark-mode .nav-link {
+body.dark-mode .nav-link {
   color: #e0e0e0 !important;
 }
 
-.dark-mode .nav-link:hover {
-  color: #ffffff !important;
-}
-
-/* 🔥 SEARCH BAR */
-.dark-mode .form-control {
+/* SEARCH + INPUT */
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select,
+body.dark-mode .form-control {
   background-color: #2a2a2a;
   color: #fff;
   border: 1px solid #444;
 }
 
-.dark-mode .form-control::placeholder {
-  color: #aaa;
-}
-
-/* 🔥 BUTTONS */
-.dark-mode .btn {
-  border: none;
-}
-
-.dark-mode .btn-search {
+/* BUTTON */
+body.dark-mode .btn-search {
   background-color: #ff5a5f;
   color: #fff;
 }
 
-/* 🔥 CARDS (Listings) */
-.dark-mode .card {
+/* CARDS */
+body.dark-mode .card {
   background-color: #2a2a2a;
   color: #e0e0e0;
   border: 1px solid #444;
 }
 
-.dark-mode .card:hover {
-  transform: scale(1.02);
-  transition: 0.2s;
-}
-
-/* 🔥 LINKS */
-.dark-mode a {
+/* LINKS */
+body.dark-mode a {
   color: #e0e0e0;
 }
 
-.dark-mode a:hover {
+body.dark-mode a:hover {
   color: #ffffff;
 }
 
-/* 🔥 INPUT + FORM */
-.dark-mode input,
-.dark-mode textarea,
-.dark-mode select {
-  background-color: #2a2a2a;
+/* FOOTER 🔥 FIXED */
+body.dark-mode .f-info {
+  background-color: #1a1a1a !important;
+  color: #ddd;
+}
+
+body.dark-mode .f-info a {
+  color: #ccc;
+}
+
+body.dark-mode .f-info a:hover {
   color: #fff;
-  border: 1px solid #444;
 }
 
-/* 🔥 FOOTER */
-.dark-mode footer {
-  background-color: #2a2a2a;
-  color: #aaa;
-}
-
-/* 🔥 FLASH MESSAGE */
-.dark-mode .alert {
+/* FLASH */
+body.dark-mode .alert {
   background-color: #333;
   color: #fff;
-  border: none;
 }
 
+/* ❤️ HEART ANIMATION */
 .heart {
   color: #fe424d;
   margin: 0 4px;
@@ -245,29 +211,4 @@ body.dark-mode {
   0% { transform: scale(1); }
   50% { transform: scale(1.2); }
   100% { transform: scale(1); }
-}
-
-/* 🌙 DARK MODE */
-body.dark-mode {
-  background-color: #121212;
-  color: white;
-}
-
-/* footer dark fix */
-body.dark-mode footer {
-  background-color: #121212;
-  color: #ddd;
-}
-
-body.dark-mode .f-info {
-  background-color: #121212;
-  color: #ddd;
-}
-
-body.dark-mode .f-info a {
-  color: #ddd;
-}
-
-body.dark-mode .f-info a:hover {
-  color: white;
 }
