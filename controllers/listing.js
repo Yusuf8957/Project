@@ -130,7 +130,7 @@ module.exports.renderEditForm = async (req, res, next) => {
 
 
 // ================= UPDATE =================
-// ================= UPDATE =================
+
 module.exports.updateListing = async (req, res, next) => {
   try {
     let { id } = req.params;
@@ -142,12 +142,15 @@ module.exports.updateListing = async (req, res, next) => {
 
     let { title, price } = req.body.listing;
 
+    // ❌ throw हटाया
     if (!title || title.trim().length < 3) {
-      throw new ExpressError(400, "Title must be at least 3 characters");
+      req.flash("error", "Title must be at least 3 characters");
+      return res.redirect(`/listings/${id}/edit`);
     }
 
     if (!price || isNaN(Number(price))) {
-      throw new ExpressError(400, `Invalid price: ${price}`);
+      req.flash("error", "Invalid price!");
+      return res.redirect(`/listings/${id}/edit`);
     }
 
     const location = req.body.listing.location;
@@ -178,7 +181,6 @@ module.exports.updateListing = async (req, res, next) => {
       price: Number(req.body.listing.price),
     });
 
-    // 🔥 FIX: null check
     if (!listing) {
       req.flash("error", "Listing not found!");
       return res.redirect("/listings");
