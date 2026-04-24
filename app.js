@@ -20,9 +20,6 @@ const ExpressError = require("./utils/ExpressError.js");
 const session = require("express-session");
 const flash = require("connect-flash");
 
-// 🔥 ADD THIS (security)
-const helmet = require("helmet");
-
 const dbUrl = process.env.ATLASDB_URL;
 
 
@@ -39,17 +36,6 @@ app.engine("ejs", ejsMate);
 
 
 // ================= MIDDLEWARE =================
-
-// 🔥 FORCE HTTPS (important for Render)
-app.use((req, res, next) => {
-  if (req.headers["x-forwarded-proto"] !== "https") {
-    return res.redirect("https://" + req.headers.host + req.url);
-  }
-  next();
-});
-
-// 🔥 SECURITY HEADERS
-app.use(helmet());
 
 // static
 app.use(express.static(path.join(__dirname, "public")));
@@ -68,7 +54,6 @@ const sessionOptions = {
   saveUninitialized: true,
   cookie: {
     httpOnly: true,
-    secure: true, // 🔥 HTTPS ke liye important
     maxAge: 7 * 24 * 60 * 60 * 1000,
   },
 };
@@ -97,7 +82,7 @@ app.use((req, res, next) => {
 
 // ================= ROUTES =================
 
-// 🔥 UPTIME ROUTE
+// 🔥 UPTIME ROUTE (FIXED)
 app.get("/ping", (req, res) => {
   return res.send("OK");
 });
