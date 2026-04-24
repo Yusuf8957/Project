@@ -11,51 +11,38 @@ const upload = multer({ storage });
 
 
 // ================= NEW =================
-// ⚠️ IMPORTANT: "/new" must be ABOVE "/:id"
 router.get(
   "/new",
   isLoggedIn,
-  wrapAsync(async (req, res) => {
-    return res.render("listings/new"); // ✅ direct render (safe)
-  })
+  wrapAsync(listingController.renderNewForm)
 );
 
 
 // ================= INDEX + CREATE =================
 router.route("/")
-  .get(wrapAsync(async (req, res) => {
-    return listingController.index(req, res);
-  }))
+  .get(wrapAsync(listingController.index))
   .post(
     isLoggedIn,
     upload.single("listing[image]"),
     validateListing,
-    wrapAsync(async (req, res) => {
-      return listingController.createListing(req, res);
-    })
+    wrapAsync(listingController.createListing)
   );
 
 
 // ================= SHOW + UPDATE + DELETE =================
 router.route("/:id")
-  .get(wrapAsync(async (req, res) => {
-    return listingController.showListing(req, res);
-  }))
+  .get(wrapAsync(listingController.showListing))
   .put(
     isLoggedIn,
     isOwner,
     upload.single("listing[image]"),
     validateListing,
-    wrapAsync(async (req, res) => {
-      return listingController.updateListing(req, res);
-    })
+    wrapAsync(listingController.updateListing)
   )
   .delete(
     isLoggedIn,
     isOwner,
-    wrapAsync(async (req, res) => {
-      return listingController.deleteListing(req, res);
-    })
+    wrapAsync(listingController.deleteListing)
   );
 
 
@@ -64,9 +51,7 @@ router.get(
   "/:id/edit",
   isLoggedIn,
   isOwner,
-  wrapAsync(async (req, res) => {
-    return listingController.renderEditForm(req, res);
-  })
+  wrapAsync(listingController.renderEditForm)
 );
 
 module.exports = router;

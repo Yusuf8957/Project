@@ -86,48 +86,45 @@ module.exports.isReviewAuthor = async (req, res, next) => {
 
 // ================= VALIDATE LISTING =================
 module.exports.validateListing = (req, res, next) => {
-  try {
-    let { listing } = req.body;
+  let { listing } = req.body;
 
-    if (!listing) {
-      throw new ExpressError(400, "Listing data is required");
-    }
-
-    if (!listing.title || listing.title.trim().length < 3) {
-      throw new ExpressError(400, "Title must be at least 3 characters");
-    }
-
-    if (!listing.price || isNaN(Number(listing.price))) {
-      throw new ExpressError(400, "Valid price is required");
-    }
-
-    // 🔥 FIX: only for POST (create)
-    if (req.method === "POST" && !req.file) {
-      throw new ExpressError(400, "Image is required");
-    }
-
-    return next();
-  } catch (err) {
-    return next(err);
+  if (!listing) {
+    req.flash("error", "Listing data is required");
+    return res.redirect("back");
   }
+
+  if (!listing.title || listing.title.trim().length < 3) {
+    req.flash("error", "Title must be at least 3 characters");
+    return res.redirect("back");
+  }
+
+  if (!listing.price || isNaN(Number(listing.price))) {
+    req.flash("error", "Valid price is required");
+    return res.redirect("back");
+  }
+
+  if (req.method === "POST" && !req.file) {
+    req.flash("error", "Image is required");
+    return res.redirect("back");
+  }
+
+  return next();
 };
 
 
 // ================= VALIDATE REVIEW =================
 module.exports.validateReview = (req, res, next) => {
-  try {
-    let { review } = req.body;
+  let { review } = req.body;
 
-    if (!review || !review.comment || review.comment.trim().length === 0) {
-      throw new ExpressError(400, "Review comment is required");
-    }
-
-    if (!review.rating || review.rating < 1 || review.rating > 5) {
-      throw new ExpressError(400, "Rating must be between 1 and 5");
-    }
-
-    return next();
-  } catch (err) {
-    return next(err);
+  if (!review || !review.comment || review.comment.trim().length === 0) {
+    req.flash("error", "Review comment is required");
+    return res.redirect("back");
   }
+
+  if (!review.rating || review.rating < 1 || review.rating > 5) {
+    req.flash("error", "Rating must be between 1 and 5");
+    return res.redirect("back");
+  }
+
+  return next();
 };
