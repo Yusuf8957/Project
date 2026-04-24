@@ -30,15 +30,28 @@
   align-items: center;
   gap: 6px;
 }
+
+/* 🔥 LOGO STYLE */
+.navbar-brand img {
+  height: 40px;
+}
+
+/* DARK MODE LOGO FIX */
+body.dark-mode .navbar-brand img {
+  filter: brightness(0) invert(1);
+}
 </style>
 
 <nav class="navbar navbar-expand-md bg-body-tertiary border-bottom sticky-top position-relative">
   <div class="container-fluid">
 
-    <!-- 🔥 LEFT SIDE -->
+    <!-- 🔥 LEFT SIDE (LOGO + TEXT) -->
     <div class="d-flex align-items-center gap-3">
-      <a class="navbar-brand" href="/listings">
-        <i class="fa-regular fa-compass"></i>
+
+      <!-- ✅ LOGO + NAME -->
+      <a class="navbar-brand d-flex align-items-center" href="/listings">
+        <img src="/images/favicon.svg" alt="logo" class="me-2">
+        <span>WanderLust</span>
       </a>
 
       <a class="nav-link" href="/listings">Explore</a>
@@ -77,9 +90,10 @@
           <a class="nav-link" href="/logout"><b>Log out</b></a>
         <% } %>
 
-<button id="darkModeToggle" class="nav-link border-0 bg-transparent">
-  <i class="fa-solid fa-moon"></i>
-</button>
+        <!-- 🌙 DARK MODE -->
+        <button id="darkModeToggle" class="nav-link border-0 bg-transparent">
+          <i class="fa-solid fa-moon"></i>
+        </button>
 
       </div>
     </div>
