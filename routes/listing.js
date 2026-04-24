@@ -7,12 +7,13 @@ const listingController = require("../controllers/listing.js");
 
 // ✅ CLOUDINARY STORAGE USE
 const multer = require("multer");
-const { storage } = require("../cloudConfig");   // 🔥 important line
+const { storage } = require("../cloudConfig");
 const upload = multer({ storage });
 
 
 // ================= ROUTES =================
 
+// 👉 INDEX + CREATE
 router.route("/")
   .get(wrapAsync(listingController.index))
   .post(
@@ -22,13 +23,35 @@ router.route("/")
     wrapAsync(listingController.createListing)
   );
 
-router.get("/new", isLoggedIn, listingController.renderNewForm);
 
+// 👉 NEW (IMPORTANT FIX: ensure correct flow)
+router.get("/new", isLoggedIn, wrapAsync(listingController.renderNewForm));
+
+
+// 👉 SHOW + UPDATE + DELETE
 router.route("/:id")
   .get(wrapAsync(listingController.showListing))
-  .put(isLoggedIn, isOwner,   upload.single("listing[image]"), validateListing, wrapAsync(listingController.updateListing))
-  .delete(isLoggedIn, isOwner, wrapAsync(listingController.deleteListing));
+  .put(
+    isLoggedIn,
+    isOwner,
+    upload.single("listing[image]"),
+    validateListing,
+    wrapAsync(listingController.updateListing)
+  )
+  .delete(
+    isLoggedIn,
+    isOwner,
+    wrapAsync(listingController.deleteListing)
+  );
 
-router.get("/:id/edit", isLoggedIn, isOwner, wrapAsync(listingController.renderEditForm));
+
+// 👉 EDIT
+router.get(
+  "/:id/edit",
+  isLoggedIn,
+  isOwner,
+  wrapAsync(listingController.renderEditForm)
+);
+
 
 module.exports = router;
