@@ -9,7 +9,7 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 
 const listingsRouter = require("./routes/listing.js");
-const reviewRouter = require("./routes/review.js"); // ✅ ADD THIS
+const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
 const passport = require("passport");
@@ -66,7 +66,7 @@ app.get("/", (req, res) => {
 });
 
 // 🔥 IMPORTANT ORDER
-app.use("/listings/:id/reviews", reviewRouter); // ✅ ADD THIS
+app.use("/listings/:id/reviews", reviewRouter);
 app.use("/listings", listingsRouter);
 app.use("/", userRouter);
 
@@ -78,7 +78,10 @@ app.use((err, req, res, next) => {
     return next(err);
   }
 
-  res.status(err.statusCode || 500).send(err.message || "Something went wrong");
+  let { statusCode = 500, message = "Something went wrong!" } = err;
+
+  // ✅ FIX: send हटाकर render use किया
+  return res.status(statusCode).render("error.ejs", { message });
 });
 
 // ================= SERVER =================
