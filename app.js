@@ -37,7 +37,6 @@ app.use(methodOverride("_method"));
 const store = MongoStore.create({
   mongoUrl: process.env.ATLASDB_URL,
   touchAfter: 24 * 3600,
-  crypto: { secret: process.env.SECRET },
 });
 
 store.on("error", (err) => {
