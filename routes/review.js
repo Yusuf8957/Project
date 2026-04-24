@@ -4,7 +4,6 @@ const router = express.Router({ mergeParams: true });
 const Listing = require("../models/listing");
 const Review = require("../models/review");
 
-// middleware
 const { isLoggedIn, isReviewAuthor } = require("../middleware");
 
 
@@ -13,13 +12,11 @@ router.post("/", isLoggedIn, async (req, res) => {
   try {
     let listing = await Listing.findById(req.params.id);
 
-    // ✅ listing check
     if (!listing) {
       req.flash("error", "Listing not found!");
       return res.redirect("/listings");
     }
 
-    // ✅ body check
     if (!req.body.review || !req.body.review.rating) {
       req.flash("error", "Rating required!");
       return res.redirect(`/listings/${req.params.id}`);
@@ -34,12 +31,12 @@ router.post("/", isLoggedIn, async (req, res) => {
     await listing.save();
 
     req.flash("success", "Review Added!");
-    res.redirect(`/listings/${listing._id}`);
+    return res.redirect(`/listings/${listing._id}`);
 
   } catch (err) {
     console.log(err);
     req.flash("error", "Something went wrong!");
-    res.redirect("/listings");
+    return res.redirect("/listings"); // ✅ FIX
   }
 });
 
@@ -59,12 +56,12 @@ router.delete("/:reviewId",
       await Review.findByIdAndDelete(reviewId);
 
       req.flash("success", "Review Deleted!");
-      res.redirect(`/listings/${id}`);
+      return res.redirect(`/listings/${id}`);
 
     } catch (err) {
       console.log(err);
       req.flash("error", "Delete failed!");
-      res.redirect(`/listings/${req.params.id}`);
+      return res.redirect(`/listings/${req.params.id}`); // ✅ FIX
     }
   }
 );

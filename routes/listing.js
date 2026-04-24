@@ -1,19 +1,22 @@
 const express = require("express");
 const router = express.Router();
-const wrapAsync = require("../utils/wrapAsync.js");
 
+const wrapAsync = require("../utils/wrapAsync.js");
 const { isLoggedIn, isOwner, validateListing } = require("../middleware.js");
 const listingController = require("../controllers/listing.js");
 
-// ✅ CLOUDINARY STORAGE USE
 const multer = require("multer");
 const { storage } = require("../cloudConfig");
 const upload = multer({ storage });
 
 
-// ================= ROUTES =================
+// 🔥 VERY IMPORTANT: NEW ROUTE TOP PE
+router.get("/new", isLoggedIn, (req, res) => {
+  return res.render("listings/new");
+});
 
-// 👉 INDEX + CREATE
+
+// INDEX + CREATE
 router.route("/")
   .get(wrapAsync(listingController.index))
   .post(
@@ -24,11 +27,7 @@ router.route("/")
   );
 
 
-// 👉 NEW (IMPORTANT FIX: ensure correct flow)
-router.get("/new", isLoggedIn, wrapAsync(listingController.renderNewForm));
-
-
-// 👉 SHOW + UPDATE + DELETE
+// SHOW + UPDATE + DELETE
 router.route("/:id")
   .get(wrapAsync(listingController.showListing))
   .put(
@@ -45,13 +44,11 @@ router.route("/:id")
   );
 
 
-// 👉 EDIT
-router.get(
-  "/:id/edit",
+// EDIT
+router.get("/:id/edit",
   isLoggedIn,
   isOwner,
   wrapAsync(listingController.renderEditForm)
 );
-
 
 module.exports = router;
