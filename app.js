@@ -83,6 +83,15 @@ app.use((req, res, next) => {
 
 // ================= ROUTES =================
 
+// ================= ROUTES =================
+
+// 🔥 UPTIME ROUTE (ADD THIS)
+app.get("/ping", (req, res) => {
+  res.send("OK");
+});
+
+
+
 app.use("/listings", listingsRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
