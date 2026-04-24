@@ -18,7 +18,6 @@ const User = require("./models/user.js");
 
 const ExpressError = require("./utils/ExpressError.js");
 const session = require("express-session");
-const MongoStore = require("connect-mongo"); // ✅ ONLY ONCE
 const flash = require("connect-flash");
 
 const dbUrl = process.env.ATLASDB_URL;
@@ -50,21 +49,8 @@ app.use(methodOverride("_method"));
 
 // ================= SESSION =================
 
-const store = MongoStore.create({
-  mongoUrl: dbUrl,
-  crypto: {
-    secret: process.env.SECRET,
-  },
-  touchAfter: 24 * 3600,
-});
-
-store.on("error", (err) => {
-  console.log("ERROR in MONGO SESSION STORE", err);
-});
-
 const sessionOptions = {
-  store,
-  secret: process.env.SECRET,
+  secret: process.env.SECRET, // ✅ env se le raha hai
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -109,7 +95,7 @@ app.use((req, res, next) => {
   next(new ExpressError(404, "Page Not Found!"));
 });
 
-// global error (fixed)
+// global error
 app.use((err, req, res, next) => {
   if (res.headersSent) {
     return next(err);
