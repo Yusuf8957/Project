@@ -246,3 +246,28 @@ body.dark-mode {
   50% { transform: scale(1.2); }
   100% { transform: scale(1); }
 }
+
+/* 🌙 DARK MODE */
+body.dark-mode {
+  background-color: #121212;
+  color: white;
+}
+
+/* footer dark fix */
+body.dark-mode footer {
+  background-color: #121212;
+  color: #ddd;
+}
+
+body.dark-mode .f-info {
+  background-color: #121212;
+  color: #ddd;
+}
+
+body.dark-mode .f-info a {
+  color: #ddd;
+}
+
+body.dark-mode .f-info a:hover {
+  color: white;
+}
