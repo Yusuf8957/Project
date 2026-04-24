@@ -12,10 +12,62 @@ body {
 
 /* ================= NAVBAR ================= */
 .navbar {
-  height: 5rem;
   background-color: white;
+  min-height: 5rem;
 }
 
+/* ================= SEARCH BAR ================= */
+.search-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 0 1rem;
+}
+
+.search-wrapper form {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.search-wrapper .form-control {
+  border-radius: 50px;
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  width: 100%;
+}
+
+.btn-search {
+  background-color: #fe424d;
+  color: #fff;
+  border-radius: 50px;
+  padding: 8px 16px;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+/* Phone pe search bar hide karo */
+@media (max-width: 767px) {
+  .search-wrapper {
+    display: none;
+  }
+}
+
+/* ================= LOGO ================= */
+.navbar-brand img {
+  height: 40px;
+}
+
+body.dark-mode .navbar-brand img {
+  filter: brightness(0) invert(1);
+}
+
+/* ================= NAV LINKS ================= */
 .fa-compass {
   color: #fe424d;
   font-size: 2rem;
@@ -46,12 +98,13 @@ body {
 
 .f-info {
   text-align: center;
-  height: 8rem;
   background-color: #ebebeb;
+  padding: 1.5rem 1rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: space-evenly;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /* ================= CARDS ================= */
@@ -78,7 +131,6 @@ body {
   text-decoration: none;
 }
 
-/* Hover Effect */
 .card-img-overlay {
   opacity: 0;
 }
@@ -102,6 +154,8 @@ body {
 
 .btns {
   display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .show-card {
@@ -114,7 +168,8 @@ body {
   position: fixed;
   top: 20px;
   right: 20px;
-  max-width: 300px;
+  max-width: 90%;
+  width: 300px;
   z-index: 9999;
 }
 
@@ -126,19 +181,24 @@ body {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
+@media (max-width: 767px) {
+  #map {
+    height: 250px;
+  }
+}
+
 /* ================= DARK MODE TOGGLE ================= */
 #darkModeToggle {
   font-size: 18px;
   cursor: pointer;
 }
 
-/* ================= 🌙 DARK MODE ================= */
+/* ================= DARK MODE ================= */
 body.dark-mode {
   background-color: #121212;
   color: #e0e0e0;
 }
 
-/* NAVBAR */
 body.dark-mode .navbar {
   background-color: #2a2a2a !important;
   border-bottom: 1px solid #444;
@@ -148,7 +208,6 @@ body.dark-mode .nav-link {
   color: #e0e0e0 !important;
 }
 
-/* SEARCH + INPUT */
 body.dark-mode input,
 body.dark-mode textarea,
 body.dark-mode select,
@@ -158,20 +217,17 @@ body.dark-mode .form-control {
   border: 1px solid #444;
 }
 
-/* BUTTON */
 body.dark-mode .btn-search {
   background-color: #ff5a5f;
   color: #fff;
 }
 
-/* CARDS */
 body.dark-mode .card {
   background-color: #2a2a2a;
   color: #e0e0e0;
   border: 1px solid #444;
 }
 
-/* LINKS */
 body.dark-mode a {
   color: #e0e0e0;
 }
@@ -180,7 +236,6 @@ body.dark-mode a:hover {
   color: #ffffff;
 }
 
-/* FOOTER 🔥 FIXED */
 body.dark-mode .f-info {
   background-color: #1a1a1a !important;
   color: #ddd;
@@ -194,13 +249,12 @@ body.dark-mode .f-info a:hover {
   color: #fff;
 }
 
-/* FLASH */
 body.dark-mode .alert {
   background-color: #333;
   color: #fff;
 }
 
-/* ❤️ HEART ANIMATION */
+/* ================= HEART ANIMATION ================= */
 .heart {
   color: #fe424d;
   margin: 0 4px;

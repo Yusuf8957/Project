@@ -1,15 +1,8 @@
 <style>
-/* 🔥 CENTER SEARCH BAR */
-.search-wrapper {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
 /* SEARCH STYLE */
 .search-wrapper form {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   align-items: center;
 }
 
@@ -17,55 +10,44 @@
   border-radius: 50px;
   border: 1px solid #ddd;
   padding: 8px 16px;
-  width: 260px;
+  width: 100%;
 }
 
 .btn-search {
   background-color: #fe424d;
   color: #fff;
   border-radius: 50px;
-  padding: 8px 18px;
+  padding: 8px 16px;
   border: none;
   display: flex;
   align-items: center;
   gap: 6px;
+  white-space: nowrap;
 }
 
-/* 🔥 LOGO STYLE */
 .navbar-brand img {
   height: 40px;
 }
 
-/* DARK MODE LOGO FIX */
 body.dark-mode .navbar-brand img {
   filter: brightness(0) invert(1);
 }
 </style>
 
-<nav class="navbar navbar-expand-md bg-body-tertiary border-bottom sticky-top position-relative">
-  <div class="container-fluid">
+<nav class="navbar navbar-expand-md bg-body-tertiary border-bottom sticky-top">
+  <div class="container-fluid d-flex align-items-center">
 
-    <!-- 🔥 LEFT SIDE -->
+    <!-- 🔥 LEFT — LOGO + EXPLORE -->
     <div class="d-flex align-items-center gap-3">
-
-      <!-- LOGO -->
       <a class="navbar-brand d-flex align-items-center" href="/listings">
         <img src="/logo.png" alt="logo" class="me-2">
       </a>
-
-      <a class="nav-link" href="/listings">Explore</a>
+      <a class="nav-link d-none d-md-block" href="/listings">Explore</a>
     </div>
 
-    <!-- TOGGLE -->
-    <button class="navbar-toggler" type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNavAltMarkup">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <!-- 🔥 CENTER SEARCH -->
-    <div class="search-wrapper">
-      <form role="search">
+    <!-- 🔥 CENTER — SEARCH (sirf md+ pe dikhega) -->
+    <div class="search-wrapper d-none d-md-flex flex-grow-1 justify-content-center px-3">
+      <form role="search" class="d-flex gap-2 w-100" style="max-width: 400px;">
         <input class="form-control" type="search" placeholder="Search destinations"/>
         <button class="btn btn-search" type="submit">
           <i class="fa-solid fa-magnifying-glass"></i>
@@ -74,18 +56,23 @@ body.dark-mode .navbar-brand img {
       </form>
     </div>
 
-    <!-- 🔥 RIGHT SIDE -->
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
+    <!-- TOGGLE (sirf mobile pe) -->
+    <button class="navbar-toggler ms-auto" type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNavAltMarkup">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- 🔥 RIGHT — NAV LINKS -->
+    <div class="collapse navbar-collapse flex-grow-0" id="navbarNavAltMarkup">
+      <div class="navbar-nav align-items-md-center">
 
         <% if(!currUser){ %>
-          <!-- NOT LOGGED IN -->
           <a class="nav-link" href="/signup"><b>Sign up</b></a>
           <a class="nav-link" href="/login"><b>Log in</b></a>
         <% } %>
 
         <% if(currUser){ %>
-          <!-- LOGGED IN -->
           <a class="nav-link" href="/listings/new">Airbnb your home</a>
           <a class="nav-link" href="/logout"><b>Log out</b></a>
         <% } %>
@@ -94,6 +81,16 @@ body.dark-mode .navbar-brand img {
         <button id="darkModeToggle" class="nav-link border-0 bg-transparent">
           <i class="fa-solid fa-moon"></i>
         </button>
+
+        <!-- 📱 MOBILE SEARCH -->
+        <div class="d-md-none mt-2 mb-2">
+          <form role="search" class="d-flex gap-2">
+            <input class="form-control" type="search" placeholder="Search destinations"/>
+            <button class="btn btn-search" type="submit">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </form>
+        </div>
 
       </div>
     </div>
