@@ -17,7 +17,6 @@ router.get(
   wrapAsync(listingController.renderNewForm)
 );
 
-
 // ================= INDEX + CREATE =================
 router.route("/")
   .get(wrapAsync(listingController.index))

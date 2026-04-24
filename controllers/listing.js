@@ -1,5 +1,4 @@
 const Listing = require("../models/listing");
-const ExpressError = require("../utils/ExpressError.js");
 
 
 // ================= INDEX =================
@@ -14,7 +13,7 @@ module.exports.index = async (req, res, next) => {
 
 
 // ================= NEW FORM =================
-module.exports.renderNewForm = (req, res) => {
+module.exports.renderNewForm = async (req, res) => {
   return res.render("listings/new");
 };
 
@@ -52,7 +51,6 @@ module.exports.createListing = async (req, res, next) => {
       return res.redirect("/listings/new");
     }
 
-    // ❗ SAFETY: user check
     if (!req.user) {
       req.flash("error", "You must be logged in!");
       return res.redirect("/login");
@@ -84,7 +82,7 @@ module.exports.createListing = async (req, res, next) => {
     const newListing = new Listing({
       ...req.body.listing,
       price: Number(req.body.listing.price),
-      owner: req.user._id, // ✅ FIXED
+      owner: req.user._id,
       geometry: {
         type: "Point",
         coordinates: coords,
@@ -114,6 +112,7 @@ module.exports.createListing = async (req, res, next) => {
 module.exports.renderEditForm = async (req, res, next) => {
   try {
     let { id } = req.params;
+
     const listing = await Listing.findById(id);
 
     if (!listing) {
@@ -130,7 +129,6 @@ module.exports.renderEditForm = async (req, res, next) => {
 
 
 // ================= UPDATE =================
-
 module.exports.updateListing = async (req, res, next) => {
   try {
     let { id } = req.params;
@@ -142,7 +140,6 @@ module.exports.updateListing = async (req, res, next) => {
 
     let { title, price } = req.body.listing;
 
-    // ❌ throw हटाया
     if (!title || title.trim().length < 3) {
       req.flash("error", "Title must be at least 3 characters");
       return res.redirect(`/listings/${id}/edit`);
