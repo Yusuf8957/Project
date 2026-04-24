@@ -18,6 +18,10 @@ module.exports.isLoggedIn = (req, res, next) => {
 
 // ================= SAVE REDIRECT =================
 module.exports.saveRedirect = (req, res, next) => {
+  // ✅ Query string se bhi redirect lo
+  if (req.query.redirect) {
+    req.session.redirectUrl = req.query.redirect;
+  }
   if (req.session.redirectUrl) {
     res.locals.redirectUrl = req.session.redirectUrl;
     delete req.session.redirectUrl;

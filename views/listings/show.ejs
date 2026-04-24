@@ -48,12 +48,11 @@
 <div class="col-8 offset-3 mb-3">
   <hr>
 
-  <% if(currUser){ %>
+  <!-- ✅ Review form sabko dikhega -->
   <h4>Leave a Review</h4>
 
   <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate class="needs-validation">
 
-    <!-- ⭐ FIXED STARABILITY INPUT -->
     <fieldset class="starability-slot">
       <legend>Rating:</legend>
 
@@ -81,11 +80,22 @@
       <div class="invalid-feedback">Please add a comment</div>
     </div>
 
-    <button type="submit" class="btn btn-outline-dark">Submit</button>
+    <!-- ✅ Logged in → real submit, Logged out → redirect to login -->
+<% if(currUser){ %>
+  <button type="submit" class="btn btn-outline-dark">Submit</button>
+<% } else { %>
+  <!-- ✅ Flash manually set karenge via redirect -->
+  <a 
+    href="/login?redirect=/listings/<%= listing._id %>&message=Please+login+first+to+leave+a+review!" 
+    class="btn btn-outline-dark"
+  >
+    Submit
+  </a>
+<% } %>
+
   </form>
 
   <hr/>
-  <% } %>
 
   <p><b>All Reviews</b></p>
 
@@ -98,7 +108,6 @@
             @<%= review.author ? review.author.username : "User" %>
           </h5>
 
-          <!-- ⭐ FIXED DISPLAY -->
           <p class="starability-result" data-rating="<%= review.rating %>"></p>
 
           <p class="card-text"><%= review.comment %></p>
@@ -106,28 +115,29 @@
           <p>Rated: <%= review.rating %> stars</p>
         </div>
 
-        <!-- DELETE -->
+        <!-- DELETE — sirf author ko dikhega -->
+        <% if(currUser && review.author && review.author._id.equals(currUser._id)){ %>
         <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
           <button class="btn btn-sm btn-dark">Delete</button>
         </form>
+        <% } %>
 
       </div>
     <% } %>
   </div>
 </div>
 
-<!-- 🔥 MAP SECTION -->
+<!-- MAP SECTION -->
 <div class="col-8 offset-3 mt-3">
   <h4>Location</h4>
   <div id="map" style="height:400px; border-radius:12px;"></div>
 </div>
+
 <!-- MAP SCRIPT -->
 <script src="/js/map.js"></script>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-
-    // ✅ SAFE FIX (no crash if geometry missing)
     const coords = <%- listing.geometry && listing.geometry.coordinates
       ? JSON.stringify(listing.geometry.coordinates)
       : JSON.stringify([77.23, 28.61]) %>;
