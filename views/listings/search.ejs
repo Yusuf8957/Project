@@ -1,5 +1,4 @@
-<% layout('layouts/boilerplate') %>
-
+<% layout("layouts/boilerplate") %>
 <style>
   .search-hero {
     background: linear-gradient(135deg, #fff0f0, #ffe8e8);
@@ -102,6 +101,12 @@
 
 <div class="mt-4 mb-5">
 
+
+  <% let visibleListings = listings.filter(function(l){ return l.image && l.image.url; }); %>
+
+
+  <% let relatedFiltered = (related || []).filter(function(item){ return item.image && item.image.url; }); %>
+
   <!-- HERO -->
   <div class="search-hero">
     <div class="d-flex align-items-center gap-3 flex-wrap">
@@ -112,7 +117,7 @@
         </h4>
         <p class="text-muted mb-0 small">
           <i class="fa-solid fa-magnifying-glass me-1" style="color:#fe424d;"></i>
-          <%= listings.length %> stay(s) found
+          <%= visibleListings.length %> stay(s) found
         </p>
       </div>
       <a href="/listings" class="btn btn-sm ms-auto" style="border-radius:50px; border:1.5px solid #fe424d; color:#fe424d; font-weight:600;">
@@ -122,7 +127,7 @@
   </div>
 
   <!-- RESULTS -->
-  <% if(listings.length === 0){ %>
+  <% if(visibleListings.length === 0){ %>
     <div class="empty-state">
       <i class="fa-solid fa-magnifying-glass fa-4x mb-3" style="color:#fe424d; opacity:0.4;"></i>
       <h5 class="fw-bold mb-2">No results found</h5>
@@ -134,39 +139,36 @@
   <% } %>
 
   <div class="row g-3">
-    <% listings.forEach(listing => { %>
-      <% if(listing.image && listing.image.url){ %>
-        <div class="col-6 col-md-4 col-lg-3">
-          <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark">
-            <div class="search-page-card card">
-              <div class="card-img-wrap">
-                <img src="<%= listing.image.url %>" alt="<%= listing.title %>">
-              </div>
-              <div class="card-body">
-                <h6 class="fw-bold mb-1 text-truncate"><%= listing.title %></h6>
-                <p class="text-muted small mb-1">
-                  <i class="fa-solid fa-location-dot" style="color:#fe424d;"></i>
-                  <%= listing.location %>
-                </p>
-                <p class="fw-bold small mb-0" style="color:#fe424d;">
-                  ₹<%= listing.price.toLocaleString("en-IN") %> / night
-                </p>
-              </div>
+    <% visibleListings.forEach(function(listing){ %>
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark">
+          <div class="search-page-card card">
+            <div class="card-img-wrap">
+              <img src="<%= listing.image.url %>" alt="<%= listing.title %>">
             </div>
-          </a>
-        </div>
-      <% } %>
+            <div class="card-body">
+              <h6 class="fw-bold mb-1 text-truncate"><%= listing.title %></h6>
+              <p class="text-muted small mb-1">
+                <i class="fa-solid fa-location-dot" style="color:#fe424d;"></i>
+                <%= listing.location %>
+              </p>
+              <p class="fw-bold small mb-0" style="color:#fe424d;">
+                ₹<%= Number(listing.price || 0).toLocaleString("en-IN") %> / night
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
     <% }) %>
   </div>
 
   <!-- RELATED -->
-  <% const relatedFiltered = related.filter(item => item.image && item.image.url); %>
   <% if(relatedFiltered.length > 0){ %>
     <div class="section-divider">
       <span>✨ You Might Also Like</span>
     </div>
     <div class="row g-3">
-      <% relatedFiltered.forEach(item => { %>
+      <% relatedFiltered.forEach(function(item){ %>
         <div class="col-6 col-md-4 col-lg-3">
           <a href="/listings/<%= item._id %>" class="text-decoration-none text-dark">
             <div class="search-page-card card">
@@ -179,14 +181,15 @@
                   <i class="fa-solid fa-location-dot" style="color:#fe424d;"></i>
                   <%= item.location %>
                 </p>
+                <!-- FIX 3: / night add kiya related mein bhi -->
                 <p class="fw-bold small mb-0" style="color:#fe424d;">
-                  ₹<%= item.price.toLocaleString("en-IN") %>
+                  ₹<%= Number(item.price || 0).toLocaleString("en-IN") %> / night
                 </p>
               </div>
             </div>
           </a>
         </div>
-      <% } %>
+      <% }) %>
     </div>
   <% } %>
 

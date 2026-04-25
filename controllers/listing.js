@@ -230,3 +230,39 @@ module.exports.deleteListing = async (req, res, next) => {
     return next(err);
   }
 };
+
+module.exports.searchListings = async (req, res, next) => {
+  try {
+    const { q } = req.query;
+
+    if (!q || q.trim() === "") {
+      req.flash("error", "Please enter a search term!");
+      return res.redirect("/listings");
+    }
+
+    const listings = await Listing.find({
+      $or: [
+        { location: { $regex: q, $options: "i" } },
+        { title: { $regex: q, $options: "i" } },
+        { country: { $regex: q, $options: "i" } },
+      ]
+    }) || [];
+
+    let related = [];
+    try {
+      related = await Listing.aggregate([{ $sample: { size: 6 } }]);
+    } catch (e) {
+      related = [];
+    }
+
+    return res.render("listings/search.ejs", {
+      listings: listings || [],
+      related: related || [],
+      q
+    });
+
+  } catch (err) {
+    console.log("SEARCH ERROR:", err);
+    return next(err);
+  }
+};
