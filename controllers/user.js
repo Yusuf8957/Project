@@ -1,6 +1,6 @@
 const User = require("../models/user.js");
 
-// ================= SIGNUP =================
+// SIGNUP 
 module.exports.renderSignupForm = (req, res) => {
   return res.render("users/signup.ejs");
 };
@@ -35,7 +35,7 @@ module.exports.login = async (req, res) => {
   return res.redirect("/listings");
 };
 
-// ================= LOGOUT =================
+//  LOGOUT 
 module.exports.logout = (req, res, next) => {
   req.logout((err) => {
     if (err) return next(err);

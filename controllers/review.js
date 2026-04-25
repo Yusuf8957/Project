@@ -1,7 +1,7 @@
 const Listing = require("../models/listing");
 const Review = require("../models/review");
 
-// ================= CREATE Review =================
+//  CREATE Review
 module.exports.createReview = async (req, res) => {
   const listing = await Listing.findById(req.params.id);
 
@@ -22,7 +22,7 @@ module.exports.createReview = async (req, res) => {
   return res.redirect(`/listings/${listing._id}`);
 };
 
-// ================= DELETE Review =================
+//  DELETE Review 
 module.exports.deleteReview = async (req, res) => {
   const { id, reviewId } = req.params;
 

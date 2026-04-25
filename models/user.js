@@ -1,14 +1,18 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-
-// ✅ IMPORTANT FIX
 const passportLocalMongoose = require("passport-local-mongoose").default;
 
 const userSchema = new Schema({
-    email: {
-        type: String,
-        required: true
+  email: {
+    type: String,
+    required: true,
+  },
+  wishlist: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Listing",
     }
+  ],
 });
 
 userSchema.plugin(passportLocalMongoose);

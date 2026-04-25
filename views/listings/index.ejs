@@ -3,29 +3,30 @@
 #filters {
   display: flex;
   flex-wrap: wrap;
-  
-   align-items: center;
+  align-items: center;
 }
 
 .filter {
   text-align: center;
-  margin-right:2rem;
-   margin-top:1rem;
-   opacity: 0.7;
+  margin-right: 2rem;
+  margin-top: 1rem;
+  opacity: 0.7;
 }
-.filter:hover{
+
+.filter:hover {
   opacity: 1;
   cursor: pointer;
 }
-.filter p{
+
+.filter p {
   font-size: 0.8rem;
 }
 
-.tax-info{
+.tax-info {
   display: none;
 }
 
-.tax-toggle{
+.tax-toggle {
   border: 1px solid black;
   border-radius: 1rem;
   height: 3.25rem;
@@ -35,117 +36,162 @@
   align-items: center;
 }
 
+.card-wrapper {
+  position: relative;
+}
+
+.heart-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  z-index: 10;
+  transition: transform 0.2s;
+}
+
+.heart-btn:hover {
+  transform: scale(1.15);
+}
+
+.heart-btn i {
+  font-size: 16px;
+  color: #ccc;
+  transition: color 0.2s;
+}
+
+.heart-btn.liked i {
+  color: #fe424d;
+}
 </style>
 
 <div id="filters">
-
   <div class="filter">
     <div><i class="fa-solid fa-fire"></i></div>
     <p>Trending</p>
   </div>
-
   <div class="filter">
     <div><i class="fa-solid fa-bed"></i></div>
     <p>Rooms</p>
   </div>
-
   <div class="filter">
-  <div><i class="fa-solid fa-snowflake"></i></div>
-  <p>Snow</p>
-</div>
-
+    <div><i class="fa-solid fa-snowflake"></i></div>
+    <p>Snow</p>
+  </div>
   <div class="filter">
     <div><i class="fa-solid fa-mountain"></i></div>
     <p>Mountains</p>
   </div>
- 
-    <div class="filter">
+  <div class="filter">
     <div><i class="fa-solid fa-person-swimming"></i></div>
     <p>Amazing Pools</p>
   </div>
-  
   <div class="filter">
-  <div><i class="fa-solid fa-utensils"></i></div>
-  <p>Food</p>
-</div>
-<div class="filter">
-  <div><i class="fa-solid fa-water"></i></div>
-  <p>Lakes</p>
-</div>
-    <div class="filter">
+    <div><i class="fa-solid fa-utensils"></i></div>
+    <p>Food</p>
+  </div>
+  <div class="filter">
+    <div><i class="fa-solid fa-water"></i></div>
+    <p>Lakes</p>
+  </div>
+  <div class="filter">
     <div><i class="fa-solid fa-plate-wheat"></i></div>
     <p>Farms</p>
   </div>
-    <div class="filter">
+  <div class="filter">
     <div><i class="fa-solid fa-person-skiing"></i></div>
-    <p>Arctic </p>
+    <p>Arctic</p>
   </div>
- 
-
-<div class="filter">
+  <div class="filter">
     <div><i class="fa-solid fa-umbrella-beach"></i></div>
     <p>Beaches</p>
   </div>
-
   <div class="filter">
     <div><i class="fa-solid fa-tree"></i></div>
     <p>Forest</p>
   </div>
-
   <div class="filter">
     <div><i class="fa-solid fa-house"></i></div>
     <p>Homes</p>
   </div>
 
-<div class="tax-toggle">
-  <div class="form-check-reverse form-switch">
-  <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
-  <label class="form-check-label" for="switchCheckDefault">Display total after taxes</label>
-</div>
+  <div class="tax-toggle">
+    <div class="form-check-reverse form-switch">
+      <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
+      <label class="form-check-label" for="switchCheckDefault">Display total after taxes</label>
+    </div>
+  </div>
 </div>
 
- 
-
-</div>
 <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
   <% for(let listing of allListings){ %>
+    <div class="col mb-3">
+      <div class="card-wrapper">
 
-    <a href="/listings/<%= listing._id %>" class="listing-link">
-      <div class="col">
-        <div class="card col listing-card">
-
-          <!-- 🔥 FINAL IMAGE FIX -->
-          <img 
-            src="<%= listing.image?.url || 'https://via.placeholder.com/300' %>" 
-            class="card-img-top" 
-            style="height:20rem; object-fit:cover;"
+        <% if(currUser){ %>
+          <button
+            class="heart-btn <%= wishlist.includes(listing._id.toString()) ? 'liked' : '' %>"
+            data-id="<%= listing._id %>"
           >
+            <i class="fa-solid fa-heart"></i>
+          </button>
+        <% } %>
 
-          <div class="card-body">
-            <p class="card-text">
-              <b><%= listing.title %></b><br>
-              ₹ <%= listing.price.toLocaleString("en-IN") %> /night
-              <i class="tax-info"> &nbsp; &nbsp; +18% GST</i>
-            </p>
+        <a href="/listings/<%= listing._id %>" class="listing-link">
+          <div class="card listing-card">
+            <img
+              src="<%= listing.image?.url || 'https://via.placeholder.com/300' %>"
+              class="card-img-top"
+              style="height:20rem; object-fit:cover;"
+            >
+            <div class="card-body">
+              <p class="card-text">
+                <b><%= listing.title %></b><br>
+                ₹ <%= listing.price.toLocaleString("en-IN") %> /night
+                <i class="tax-info"> &nbsp; &nbsp; +18% GST</i>
+              </p>
+            </div>
           </div>
+        </a>
 
-        </div>
       </div>
-    </a>
-
+    </div>
   <% } %>
 </div>
 
 <script>
-  let taxSwitch=document.getElementById("switchCheckDefault");
+  let taxSwitch = document.getElementById("switchCheckDefault");
   taxSwitch.addEventListener("click", () => {
-   let taxInfo=document.getElementsByClassName("tax-info");
-    for(info of taxInfo){
-      if(info.style.display!="inline"){
-        info.style.display="inline";
-      } else{
-      info.style.display="none";
+    let taxInfo = document.getElementsByClassName("tax-info");
+    for (let info of taxInfo) {
+      info.style.display = info.style.display !== "inline" ? "inline" : "none";
     }
-  }
+  });
+
+  document.querySelectorAll(".heart-btn").forEach(btn => {
+    btn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const id = btn.dataset.id;
+      try {
+        const res = await fetch(`/wishlist/add/${id}`, { method: "POST" });
+        const data = await res.json();
+        if (data.status === "added") {
+          btn.classList.add("liked");
+        } else {
+          btn.classList.remove("liked");
+        }
+      } catch (err) {
+        console.log("Wishlist error:", err);
+      }
+    });
   });
 </script>

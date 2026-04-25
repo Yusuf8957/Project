@@ -7,13 +7,13 @@ const User = require("../models/user");
 const { saveRedirect } = require("../middleware");
 
 
-// ================= SIGNUP FORM =================
+//  SIGNUP FORM 
 router.get("/signup", (req, res) => {
   return res.render("users/signup");
 });
 
 
-// ================= SIGNUP =================
+//  SIGNUP 
 router.post("/signup", async (req, res, next) => {
   try {
     let { username, email, password } = req.body;
@@ -35,7 +35,7 @@ router.post("/signup", async (req, res, next) => {
 });
 
 
-// ================= LOGIN FORM =================
+//  LOGIN FORM 
 // ✅ Sirf EK route — message directly pass ho raha hai
 router.get("/login", (req, res) => {
   if (req.query.redirect) {
@@ -47,7 +47,7 @@ router.get("/login", (req, res) => {
 });
 
 
-// ================= LOGIN =================
+//  LOGIN 
 router.post(
   "/login",
   saveRedirect,
@@ -64,7 +64,7 @@ router.post(
 );
 
 
-// ================= LOGOUT =================
+//  LOGOUT 
 router.get("/logout", (req, res, next) => {
   req.logout((err) => {
     if (err) return next(err);

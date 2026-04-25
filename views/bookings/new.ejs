@@ -1,0 +1,241 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+  .booking-hero {
+    background: linear-gradient(135deg, #fe424d, #ff6b6b);
+    border-radius: 1.5rem 1.5rem 0 0;
+    padding: 2rem;
+    color: white;
+    text-align: center;
+  }
+
+  .booking-wrapper {
+    background: white;
+    border-radius: 1.5rem;
+    box-shadow: 0 12px 40px rgba(254,66,77,0.15);
+    overflow: hidden;
+    max-width: 540px;
+    margin: 0 auto;
+  }
+
+  body.dark-mode .booking-wrapper {
+    background: #1e1e1e;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  }
+
+  .booking-body {
+    padding: 2rem;
+  }
+
+  .listing-preview {
+    display: flex;
+    gap: 1rem;
+    background: #f8f8f8;
+    border-radius: 1rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+  }
+
+  body.dark-mode .listing-preview {
+    background: #2a2a2a;
+  }
+
+  .listing-preview img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 0.8rem;
+    flex-shrink: 0;
+  }
+
+  .date-input-group label {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #555;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  body.dark-mode .date-input-group label {
+    color: #bbb;
+  }
+
+  .date-input-group input {
+    border-radius: 0.8rem;
+    border: 1.5px solid #eee;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    transition: border 0.2s;
+    width: 100%;
+  }
+
+  .date-input-group input:focus {
+    border-color: #fe424d;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(254,66,77,0.1);
+  }
+
+  .price-summary {
+    background: linear-gradient(135deg, #fff0f0, #ffe8e8);
+    border-radius: 1rem;
+    padding: 1.2rem;
+    margin: 1.2rem 0;
+    border-left: 3px solid #fe424d;
+  }
+
+  body.dark-mode .price-summary {
+    background: linear-gradient(135deg, #2a1a1a, #1e1515);
+  }
+
+  .price-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+
+  .price-row.total {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #fe424d;
+    border-top: 1px solid #ffd0d3;
+    padding-top: 8px;
+    margin-top: 4px;
+  }
+
+  .btn-confirm {
+    background: linear-gradient(135deg, #fe424d, #ff6b6b);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 30px;
+    font-weight: 700;
+    font-size: 1rem;
+    width: 100%;
+    box-shadow: 0 6px 20px rgba(254,66,77,0.35);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .btn-confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(254,66,77,0.45);
+    color: white;
+  }
+</style>
+
+<div class="mt-4 mb-5">
+  <div class="booking-wrapper">
+
+    <!-- HERO -->
+    <div class="booking-hero">
+      <i class="fa-solid fa-calendar-check fa-2x mb-2"></i>
+      <h4 class="fw-bold mb-0">Book Your Stay</h4>
+      <p class="small opacity-75 mb-0">Select your dates below</p>
+    </div>
+
+    <div class="booking-body">
+
+      <!-- LISTING PREVIEW -->
+      <div class="listing-preview">
+        <img src="<%= listing.image?.url || 'https://via.placeholder.com/100' %>" alt="<%= listing.title %>">
+        <div>
+          <h6 class="fw-bold mb-1"><%= listing.title %></h6>
+          <p class="text-muted small mb-1">
+            <i class="fa-solid fa-location-dot" style="color:#fe424d;"></i>
+            <%= listing.location %>, <%= listing.country %>
+          </p>
+          <p class="fw-bold mb-0" style="color:#fe424d;">
+            ₹<%= listing.price.toLocaleString("en-IN") %> / night
+          </p>
+        </div>
+      </div>
+
+      <!-- FORM -->
+     <form action="/bookings/<%= listing._id %>/book" method="POST" id="bookingForm">
+
+        <div class="row g-3 mb-3">
+          <div class="col-6">
+            <div class="date-input-group">
+              <label><i class="fa-solid fa-plane-arrival me-1" style="color:#fe424d;"></i> Check-in</label>
+              <input type="date" name="checkIn" id="checkIn" required>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="date-input-group">
+              <label><i class="fa-solid fa-plane-departure me-1" style="color:#fe424d;"></i> Check-out</label>
+              <input type="date" name="checkOut" id="checkOut" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRICE SUMMARY -->
+        <div class="price-summary" id="priceSummary" style="display:none;">
+          <div class="price-row">
+            <span>₹<%= listing.price.toLocaleString("en-IN") %> × <span id="nightCount">0</span> nights</span>
+            <span id="totalPrice">₹0</span>
+          </div>
+          <div class="price-row text-muted">
+            <span>GST (18%)</span>
+            <span id="gstPrice">₹0</span>
+          </div>
+          <div class="price-row total">
+            <span>Total Payable</span>
+            <span id="grandTotal">₹0</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-confirm mt-2">
+          <i class="fa-solid fa-lock me-2"></i> Confirm Booking
+        </button>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+<script>
+  const pricePerNight = <%= listing.price %>;
+  const checkIn = document.getElementById("checkIn");
+  const checkOut = document.getElementById("checkOut");
+  const priceSummary = document.getElementById("priceSummary");
+
+  const today = new Date().toISOString().split("T")[0];
+  checkIn.min = today;
+  checkOut.min = today;
+
+  checkIn.addEventListener("change", () => {
+    checkOut.min = checkIn.value;
+    calculatePrice();
+  });
+
+  checkOut.addEventListener("change", calculatePrice);
+function calculatePrice() {
+  if (!checkIn.value || !checkOut.value) return;
+
+  const d1 = new Date(checkIn.value);
+  const d2 = new Date(checkOut.value);
+
+  const nights = Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24));
+
+  // ✅ YAHI ADD KARNA HAI
+  if (nights <= 0) {
+    alert("Check-out must be after check-in!");
+    return;
+  }
+
+  const total = nights * pricePerNight;
+  const gst = Math.round(total * 0.18);
+  const grand = total + gst;
+
+  document.getElementById("nightCount").textContent = nights;
+  document.getElementById("totalPrice").textContent = "₹" + total.toLocaleString("en-IN");
+  document.getElementById("gstPrice").textContent = "₹" + gst.toLocaleString("en-IN");
+  document.getElementById("grandTotal").textContent = "₹" + grand.toLocaleString("en-IN");
+
+  priceSummary.style.display = "block";
+}
+
+</script>

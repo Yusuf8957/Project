@@ -3,7 +3,7 @@ const Review = require("./models/review");
 const ExpressError = require("./utils/ExpressError");
 
 
-// ================= LOGIN CHECK =================
+//  LOGIN CHECK 
 module.exports.isLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) {
     if (req.method === "GET") {
@@ -16,9 +16,9 @@ module.exports.isLoggedIn = (req, res, next) => {
 };
 
 
-// ================= SAVE REDIRECT =================
+// SAVE REDIRECT 
 module.exports.saveRedirect = (req, res, next) => {
-  // ✅ Query string se bhi redirect lo
+  //  Query string se bhi redirect lo
   if (req.query.redirect) {
     req.session.redirectUrl = req.query.redirect;
   }
@@ -53,7 +53,7 @@ module.exports.isOwner = async (req, res, next) => {
 };
 
 
-// ================= REVIEW AUTHOR CHECK =================
+// REVIEW AUTHOR CHECK 
 module.exports.isReviewAuthor = async (req, res, next) => {
   try {
     let { reviewId, id } = req.params;
@@ -76,7 +76,7 @@ module.exports.isReviewAuthor = async (req, res, next) => {
 };
 
 
-// ================= VALIDATE LISTING =================
+// =VALIDATE LISTING 
 module.exports.validateListing = (req, res, next) => {
   let { listing } = req.body;
 
@@ -108,7 +108,7 @@ module.exports.validateListing = (req, res, next) => {
 };
 
 
-// ================= VALIDATE REVIEW =================
+//  VALIDATE REVIEW
 module.exports.validateReview = (req, res, next) => {
   let { review } = req.body;
 

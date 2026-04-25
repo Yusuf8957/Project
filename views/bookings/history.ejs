@@ -1,0 +1,187 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+  .bookings-hero {
+    background: linear-gradient(135deg, #fff0f0, #ffe8e8);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-left: 4px solid #fe424d;
+  }
+
+  body.dark-mode .bookings-hero {
+    background: linear-gradient(135deg, #2a1a1a, #1e1515);
+  }
+
+  .booking-card {
+    border: none;
+    border-radius: 1.2rem;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: transform 0.25s, box-shadow 0.25s;
+    background: white;
+  }
+
+  .booking-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(254,66,77,0.12);
+  }
+
+  body.dark-mode .booking-card {
+    background: #1e1e1e;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+
+  .booking-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+
+  .booking-card:hover img {
+    transform: scale(1.05);
+  }
+
+  .confirmed-badge {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    border-radius: 50px;
+    padding: 3px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-cancel {
+    border: 1.5px solid #fe424d;
+    color: #fe424d;
+    border-radius: 50px;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    background: transparent;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .btn-cancel:hover {
+    background: #fe424d;
+    color: white;
+  }
+
+  .btn-view {
+    background: #222;
+    color: white;
+    border-radius: 50px;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .btn-view:hover {
+    background: #444;
+    color: white;
+  }
+
+  .date-chip {
+    background: #f0f0f0;
+    border-radius: 50px;
+    padding: 4px 10px;
+    font-size: 11px;
+    color: #555;
+    display: inline-block;
+  }
+
+  body.dark-mode .date-chip {
+    background: #2a2a2a;
+    color: #aaa;
+  }
+
+  .empty-state {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 4rem 2rem;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+
+  body.dark-mode .empty-state {
+    background: #1e1e1e;
+  }
+
+  .count-badge {
+    background: linear-gradient(135deg, #fe424d, #ff6b6b);
+    color: white;
+    border-radius: 50px;
+    padding: 4px 14px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+</style>
+<div class="mt-4 mb-5">
+
+  <!-- HERO -->
+  <div class="bookings-hero d-flex align-items-center gap-3">
+    <i class="fa-solid fa-calendar-check fa-2x" style="color:#fe424d;"></i>
+
+    <h4 class="mb-0">My Bookings</h4>
+
+    <span class="ms-auto count-badge">
+      <%= bookings.length %> booking<%= bookings.length !== 1 ? "s" : "" %>
+    </span>
+  </div>
+
+  <!-- BOOKINGS LIST -->
+  <% if(bookings.length > 0){ %>
+
+    <div class="row mt-4">
+      <% bookings.forEach(booking => { %>
+
+        <div class="col-md-4 mb-4">
+          <div class="booking-card p-3">
+
+            <img src="<%= booking.listing.image?.url %>" 
+                 class="img-fluid rounded mb-2">
+
+            <h5 class="fw-bold"><%= booking.listing.title %></h5>
+
+            <p class="text-muted mb-1">
+              📍 <%= booking.listing.location %>
+            </p>
+
+            <p class="mb-1">
+              <b>Check-in:</b> <%= booking.checkIn.toDateString() %><br>
+              <b>Check-out:</b> <%= booking.checkOut.toDateString() %>
+            </p>
+
+            <p class="mb-1">
+              <b>Nights:</b> <%= booking.nights %>
+            </p>
+
+            <p class="fw-bold text-danger">
+              ₹<%= booking.totalPrice.toLocaleString("en-IN") %>
+            </p>
+
+            <form action="/bookings/<%= booking._id %>?_method=DELETE" method="POST">
+              <button class="btn btn-sm btn-outline-danger">Cancel</button>
+            </form>
+
+          </div>
+        </div>
+
+      <% }) %>
+    </div>
+
+  <% } else { %>
+
+    <div class="empty-state mt-4">
+      <h5>No bookings yet 😢</h5>
+      <a href="/listings" class="btn btn-danger mt-3">Browse Stays</a>
+    </div>
+
+  <% } %>
+
+</div>

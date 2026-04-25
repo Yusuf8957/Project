@@ -1,0 +1,193 @@
+<% layout('layouts/boilerplate') %>
+
+<style>
+  .search-hero {
+    background: linear-gradient(135deg, #fff0f0, #ffe8e8);
+    border-radius: 1.5rem;
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+    border-left: 4px solid #fe424d;
+  }
+
+  body.dark-mode .search-hero {
+    background: linear-gradient(135deg, #2a1a1a, #1e1515);
+  }
+
+  .search-badge {
+    background: linear-gradient(135deg, #fe424d, #ff6b6b);
+    color: white;
+    border-radius: 50px;
+    padding: 4px 16px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .search-page-card {
+    border: none;
+    border-radius: 1.2rem;
+    overflow: hidden;
+    transition: transform 0.25s, box-shadow 0.25s;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    background: white;
+    height: 100%;
+  }
+
+  .search-page-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(254,66,77,0.15);
+  }
+
+  body.dark-mode .search-page-card {
+    background: #1e1e1e;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  }
+
+  .search-page-card .card-img-wrap {
+    overflow: hidden;
+  }
+
+  .search-page-card img {
+    height: 180px;
+    width: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+
+  .search-page-card:hover img {
+    transform: scale(1.06);
+  }
+
+  .search-page-card .card-body {
+    padding: 0.8rem;
+  }
+
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2.5rem 0 1.5rem;
+  }
+
+  .section-divider::before,
+  .section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #ffd0d3, transparent);
+  }
+
+  .section-divider span {
+    color: #fe424d;
+    font-weight: 700;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+
+  .empty-state {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 4rem 2rem;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+
+  body.dark-mode .empty-state {
+    background: #1e1e1e;
+  }
+
+  @media (max-width: 576px) {
+    .search-page-card img { height: 150px; }
+  }
+</style>
+
+<div class="mt-4 mb-5">
+
+  <!-- HERO -->
+  <div class="search-hero">
+    <div class="d-flex align-items-center gap-3 flex-wrap">
+      <div>
+        <h4 class="fw-bold mb-1">
+          Search Results for
+          <span class="search-badge ms-2"><%= q %></span>
+        </h4>
+        <p class="text-muted mb-0 small">
+          <i class="fa-solid fa-magnifying-glass me-1" style="color:#fe424d;"></i>
+          <%= listings.length %> stay(s) found
+        </p>
+      </div>
+      <a href="/listings" class="btn btn-sm ms-auto" style="border-radius:50px; border:1.5px solid #fe424d; color:#fe424d; font-weight:600;">
+        ← All Listings
+      </a>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <% if(listings.length === 0){ %>
+    <div class="empty-state">
+      <i class="fa-solid fa-magnifying-glass fa-4x mb-3" style="color:#fe424d; opacity:0.4;"></i>
+      <h5 class="fw-bold mb-2">No results found</h5>
+      <p class="text-muted mb-4">Try searching for a different location or keyword.</p>
+      <a href="/listings" class="btn px-4 py-2 fw-bold" style="background:linear-gradient(135deg,#fe424d,#ff6b6b); color:white; border-radius:50px;">
+        Browse All Stays
+      </a>
+    </div>
+  <% } %>
+
+  <div class="row g-3">
+    <% listings.forEach(listing => { %>
+      <% if(listing.image && listing.image.url){ %>
+        <div class="col-6 col-md-4 col-lg-3">
+          <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark">
+            <div class="search-page-card card">
+              <div class="card-img-wrap">
+                <img src="<%= listing.image.url %>" alt="<%= listing.title %>">
+              </div>
+              <div class="card-body">
+                <h6 class="fw-bold mb-1 text-truncate"><%= listing.title %></h6>
+                <p class="text-muted small mb-1">
+                  <i class="fa-solid fa-location-dot" style="color:#fe424d;"></i>
+                  <%= listing.location %>
+                </p>
+                <p class="fw-bold small mb-0" style="color:#fe424d;">
+                  ₹<%= listing.price.toLocaleString("en-IN") %> / night
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+      <% } %>
+    <% }) %>
+  </div>
+
+  <!-- RELATED -->
+  <% const relatedFiltered = related.filter(item => item.image && item.image.url); %>
+  <% if(relatedFiltered.length > 0){ %>
+    <div class="section-divider">
+      <span>✨ You Might Also Like</span>
+    </div>
+    <div class="row g-3">
+      <% relatedFiltered.forEach(item => { %>
+        <div class="col-6 col-md-4 col-lg-3">
+          <a href="/listings/<%= item._id %>" class="text-decoration-none text-dark">
+            <div class="search-page-card card">
+              <div class="card-img-wrap">
+                <img src="<%= item.image.url %>" alt="<%= item.title %>">
+              </div>
+              <div class="card-body">
+                <h6 class="fw-bold mb-1 text-truncate"><%= item.title %></h6>
+                <p class="text-muted small mb-1">
+                  <i class="fa-solid fa-location-dot" style="color:#fe424d;"></i>
+                  <%= item.location %>
+                </p>
+                <p class="fw-bold small mb-0" style="color:#fe424d;">
+                  ₹<%= item.price.toLocaleString("en-IN") %>
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+      <% } %>
+    </div>
+  <% } %>
+
+</div>

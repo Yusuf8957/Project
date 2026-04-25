@@ -7,7 +7,7 @@ const Review = require("../models/review");
 const { isLoggedIn, isReviewAuthor } = require("../middleware");
 
 
-// ================= ADD REVIEW =================
+// ADD REVIEW 
 router.post("/", isLoggedIn, async (req, res) => {
   try {
     let { id } = req.params;
@@ -52,7 +52,7 @@ router.post("/", isLoggedIn, async (req, res) => {
 });
 
 
-// ================= DELETE REVIEW =================
+// DELETE REVIEW 
 router.delete("/:reviewId",
   isLoggedIn,
   isReviewAuthor,

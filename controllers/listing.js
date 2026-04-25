@@ -1,24 +1,33 @@
 const Listing = require("../models/listing");
+const User = require("../models/user");
 
 
-// ================= INDEX =================
+//  INDEX 
 module.exports.index = async (req, res, next) => {
   try {
     const allListings = await Listing.find({});
-    return res.render("listings/index", { allListings });
+
+    // Wishlist ke liye user populate karo
+    let wishlist = [];
+    if (req.user) {
+      const user = await User.findById(req.user._id);
+      wishlist = user.wishlist.map(id => id.toString());
+    }
+
+    return res.render("listings/index", { allListings, wishlist });
   } catch (err) {
     return next(err);
   }
 };
 
 
-// ================= NEW FORM =================
+//  NEW FORM 
 module.exports.renderNewForm = async (req, res) => {
   return res.render("listings/new");
 };
 
 
-// ================= SHOW =================
+//  SHOW 
 module.exports.showListing = async (req, res, next) => {
   try {
     let { id } = req.params;
@@ -43,7 +52,7 @@ module.exports.showListing = async (req, res, next) => {
 };
 
 
-// ================= CREATE =================
+//  CREATE 
 module.exports.createListing = async (req, res, next) => {
   try {
     if (!req.body.listing) {
@@ -207,7 +216,7 @@ module.exports.updateListing = async (req, res, next) => {
 };
 
 
-// ================= DELETE =================
+//  DELETE
 module.exports.deleteListing = async (req, res, next) => {
   try {
     let { id } = req.params;
