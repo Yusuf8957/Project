@@ -97,6 +97,9 @@
     "passport-local-mongoose": "^9.0.1",
   
       
+    "razorpay": "^2.9.6",
+  
+      
     "twilio": "^6.0.0"
   
     }

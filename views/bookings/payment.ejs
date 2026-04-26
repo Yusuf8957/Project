@@ -1,0 +1,180 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+  .payment-card {
+    border: none;
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px rgba(254,66,77,0.12);
+    overflow: hidden;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .payment-hero {
+    background: linear-gradient(135deg, #fe424d, #ff6b6b);
+    padding: 2rem;
+    color: white;
+    text-align: center;
+  }
+
+  .payment-body {
+    padding: 2rem;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .summary-row.total {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #fe424d;
+    border-bottom: none;
+    padding-top: 12px;
+  }
+
+  .btn-pay {
+    background: linear-gradient(135deg, #fe424d, #ff6b6b);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 30px;
+    font-weight: 700;
+    font-size: 1rem;
+    width: 100%;
+    box-shadow: 0 6px 20px rgba(254,66,77,0.35);
+    transition: transform 0.2s;
+  }
+
+  .btn-pay:hover {
+    transform: translateY(-2px);
+    color: white;
+  }
+
+  body.dark-mode .payment-card { background: #1e1e1e; }
+  body.dark-mode .payment-body { background: #1e1e1e; }
+  body.dark-mode .summary-row { border-color: #333; }
+</style>
+
+<div class="mt-4 mb-5">
+  <div class="payment-card">
+
+    <!-- Hero -->
+    <div class="payment-hero">
+      <i class="fa-solid fa-lock fa-2x mb-2"></i>
+      <h4 class="fw-bold mb-0">Secure Payment</h4>
+      <p class="small opacity-75 mb-0">Powered by Razorpay</p>
+    </div>
+
+    <div class="payment-body">
+
+      <!-- Listing Preview -->
+      <div class="d-flex gap-3 align-items-center mb-4 p-3 rounded-3" style="background:#f8f8f8;">
+        <img
+          src="<%= listing.image?.url %>"
+          style="width:70px; height:70px; object-fit:cover; border-radius:0.8rem;"
+        />
+        <div>
+          <h6 class="fw-bold mb-1"><%= listing.title %></h6>
+          <p class="text-muted small mb-0">
+            <i class="fa-solid fa-location-dot" style="color:#fe424d;"></i>
+            <%= listing.location %>
+          </p>
+        </div>
+      </div>
+
+      <!-- Booking Summary -->
+      <div class="mb-4">
+        <h6 class="fw-bold mb-3">Booking Summary</h6>
+        <div class="summary-row">
+          <span class="text-muted">Check-in</span>
+          <span><%= new Date(checkIn).toDateString() %></span>
+        </div>
+        <div class="summary-row">
+          <span class="text-muted">Check-out</span>
+          <span><%= new Date(checkOut).toDateString() %></span>
+        </div>
+        <div class="summary-row">
+          <span class="text-muted">Nights</span>
+          <span><%= nights %></span>
+        </div>
+        <div class="summary-row">
+          <span class="text-muted">Price (<%= nights %> nights)</span>
+          <span>₹<%= totalPrice.toLocaleString("en-IN") %></span>
+        </div>
+        <div class="summary-row">
+          <span class="text-muted">GST (18%)</span>
+          <span>₹<%= gst.toLocaleString("en-IN") %></span>
+        </div>
+        <div class="summary-row total">
+          <span>Total Payable</span>
+          <span>₹<%= grandTotal.toLocaleString("en-IN") %></span>
+        </div>
+      </div>
+
+      <!-- Pay Button -->
+      <button id="payBtn" class="btn-pay">
+        <i class="fa-solid fa-lock me-2"></i>
+        Pay ₹<%= grandTotal.toLocaleString("en-IN") %>
+      </button>
+
+      <!-- Back -->
+      <div class="text-center mt-3">
+        <a href="/listings/<%= listing._id %>" class="text-muted small">
+          <i class="fa-solid fa-arrow-left me-1"></i>Cancel
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Razorpay -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  document.getElementById("payBtn").addEventListener("click", function () {
+    const options = {
+      key: "<%= razorpayKey %>",
+      amount: <%= grandTotal * 100 %>,
+      currency: "INR",
+      name: "Wanderlust",
+      description: "<%= listing.title %>",
+      order_id: "<%= order.id %>",
+      handler: function (response) {
+        // Form submit karke verify karo
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = "/bookings/verify-payment";
+
+        const fields = {
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_signature: response.razorpay_signature,
+        };
+
+        Object.entries(fields).forEach(([key, value]) => {
+          const input = document.createElement("input");
+          input.type = "hidden";
+          input.name = key;
+          input.value = value;
+          form.appendChild(input);
+        });
+
+        document.body.appendChild(form);
+        form.submit();
+      },
+      prefill: {
+        name: "<%= currUser ? currUser.username : '' %>",
+        email: "<%= currUser ? currUser.email : '' %>",
+      },
+      theme: { color: "#fe424d" },
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.open();
+  });
+</script>

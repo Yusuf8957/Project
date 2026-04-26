@@ -224,31 +224,28 @@
           <strong><%= listing.location %>, <%= listing.country %></strong>
         </p>
 
-       
+        <!-- ✅ SIRF BOOK NOW — Pay Now hata diya -->
+        <% if(currUser){ %>
 
-  <!-- ✅ ALWAYS SHOW BOOK BUTTON -->
-  <% if(currUser){ %>
+          <a href="/bookings/<%= listing._id %>/book" class="btn-book-now">
+            <i class="fa-solid fa-calendar-check me-2"></i> Book Now
+          </a>
 
-  <!-- ✅ Book Now -->
-  <a href="/bookings/<%= listing._id %>/book" class="btn-book-now">
-    <i class="fa-solid fa-calendar-check me-2"></i> Book Now
-  </a>
+          <!-- Owner Warning -->
+          <% if(listing.owner && listing.owner._id.equals(currUser._id)){ %>
+            <div class="alert alert-warning mt-2 text-center small">
+              <i class="fa-solid fa-triangle-exclamation me-1"></i>
+              You are booking your own listing
+            </div>
+          <% } %>
 
-  <!-- OPTIONAL: owner message -->
-  <% if(listing.owner && listing.owner._id.equals(currUser._id)){ %>
-    <div class="alert alert-warning mt-2 text-center">
-      You are booking your own listing
-    </div>
-  <% } %>
+        <% } else { %>
 
-<% } else { %>
+          <a href="/login?redirect=/listings/<%= listing._id %>" class="btn-book-now">
+            <i class="fa-solid fa-lock me-2"></i> Login to Book
+          </a>
 
-  <!-- Login button -->
-  <a href="/login" class="btn-book-now">
-    <i class="fa-solid fa-lock me-2"></i> Login to Book
-  </a>
-
-<% } %>
+        <% } %>
 
         <!-- EDIT / DELETE -->
         <% if(currUser && listing.owner && listing.owner._id.equals(currUser._id)){ %>
@@ -310,12 +307,14 @@
       </div>
 
       <% if(currUser){ %>
-        <button type="submit" class="btn-book-now" style="background:linear-gradient(135deg,#222,#444); box-shadow:none;">
+        <button type="submit" class="btn-book-now"
+          style="background:linear-gradient(135deg,#222,#444); box-shadow:none;">
           <i class="fa-solid fa-paper-plane me-2"></i> Submit Review
         </button>
       <% } else { %>
         <a href="/login?redirect=/listings/<%= listing._id %>"
-          class="btn-book-now" style="background:linear-gradient(135deg,#222,#444); box-shadow:none;">
+          class="btn-book-now"
+          style="background:linear-gradient(135deg,#222,#444); box-shadow:none;">
           <i class="fa-solid fa-lock me-2"></i> Login to Review
         </a>
       <% } %>
@@ -337,8 +336,10 @@
                 </h6>
               </div>
               <% if(currUser && review.author && review.author._id.equals(currUser._id)){ %>
-                <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
-                  <button class="btn btn-sm" style="background:none; border:none; color:#fe424d;">
+                <form method="POST"
+                  action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+                  <button class="btn btn-sm"
+                    style="background:none; border:none; color:#fe424d;">
                     <i class="fa-solid fa-trash"></i>
                   </button>
                 </form>
@@ -354,7 +355,9 @@
 
 </div>
 
+<!-- Map Script -->
 <script src="/js/map.js"></script>
+
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const coords = <%- listing.geometry && listing.geometry.coordinates

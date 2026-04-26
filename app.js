@@ -21,22 +21,23 @@ const wishlistRouter = require("./routes/wishlist.js");
 const bookingRouter = require("./routes/booking.js");
 const authRoutes = require("./routes/auth");
 
-// ================= DB =================
+//  DATABASE 
 mongoose.connect(process.env.ATLASDB_URL)
   .then(() => console.log("connected to DB"))
   .catch(err => console.log(err));
 
-// ================= VIEW =================
+// VIEW ENGINE 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.engine("ejs", ejsMate);
 
-//MIDDLEWARE 
+//  MIDDLEWARE 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(methodOverride("_method"));
 
-//  SESSION
+// SESSION STORE 
 const store = MongoStore.create({
   mongoUrl: process.env.ATLASDB_URL,
   touchAfter: 24 * 3600,
@@ -59,15 +60,14 @@ app.use(session({
 
 app.use(flash());
 
-// ================= PASSPORT =================
+//  PASSPORT 
 app.use(passport.initialize());
 app.use(passport.session());
-
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// ================= LOCALS =================
+//  LOCALS 
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
@@ -76,7 +76,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// ================= ROUTES =================
+//  ROUTES 
 app.get("/", (req, res) => {
   return res.redirect("/listings");
 });
@@ -87,14 +87,15 @@ app.use("/bookings", bookingRouter);
 app.use("/wishlist", wishlistRouter);
 app.use("/api/auth", authRoutes);
 app.use("/", userRouter);
-// ERROR HANDLER
+
+//ERROR HANDLER 
 app.use((err, req, res, next) => {
   if (res.headersSent) return next(err);
   let { statusCode = 500, message = "Something went wrong!" } = err;
   return res.status(statusCode).render("error.ejs", { message });
 });
 
-//  SERVER 
+//SERVER 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`server running on port ${PORT}`);
