@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const User = require("../models/user");
-const Otp = require("../models/Otp");
+const Otp = require("../models/otp"); // ✅ lowercase 'otp' fix
 const sendEmailOtp = require("../utils/sendEmail");
 const { saveRedirect } = require("../middleware");
 
@@ -19,28 +19,24 @@ router.get("/signup", (req, res) => {
 // ─── SIGNUP — Send OTP first ───────────────────────────
 router.post("/signup", async (req, res, next) => {
   try {
-    // Extract role along with other fields
     const { username, email, phone, password, role } = req.body;
 
-    // Check if email already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       req.flash("error", "Email is already registered!");
       return res.redirect("/signup");
     }
 
-    // Generate OTP and send to email
     const otp = generateOtp();
     await Otp.deleteMany({ identifier: email, type: "email" });
     await Otp.create({
       identifier: email,
       otp,
       type: "email",
-      expiresAt: new Date(Date.now() + 1 * 60 * 1000), // Expires in 1 minute
+      expiresAt: new Date(Date.now() + 1 * 60 * 1000),
     });
     await sendEmailOtp(email, otp);
 
-    // Save role in session along with other data
     req.session.pendingSignup = { username, email, phone, password, role };
 
     return res.render("users/otp-verify", {
@@ -91,7 +87,6 @@ router.post("/verify-otp", async (req, res, next) => {
         return res.redirect("/signup");
       }
 
-      // Extract role from session
       const { username, email, phone, password, role } = pendingSignup;
 
       const record = await Otp.findOne({ identifier: email, type: "email" });
@@ -109,7 +104,6 @@ router.post("/verify-otp", async (req, res, next) => {
         return res.render("users/otp-verify", { type: "email", identifier: email, isSignup: true });
       }
 
-      // OTP verified — create account with role
       await Otp.deleteOne({ _id: record._id });
       delete req.session.pendingSignup;
 
@@ -117,7 +111,7 @@ router.post("/verify-otp", async (req, res, next) => {
         username,
         email,
         phone,
-        role: role || "traveller", // Default to traveller if not selected
+        role: role || "traveller",
         isEmailVerified: true,
       });
       const registeredUser = await User.register(newUser, password);
@@ -157,7 +151,7 @@ router.post("/forgot-password", async (req, res, next) => {
       identifier: email,
       otp,
       type: "forgot",
-      expiresAt: new Date(Date.now() + 1 * 60 * 1000), // Expires in 1 minute
+      expiresAt: new Date(Date.now() + 1 * 60 * 1000),
     });
     await sendEmailOtp(email, otp);
 
@@ -200,7 +194,6 @@ router.post("/verify-forgot-otp", async (req, res, next) => {
       return res.render("users/otp-verify", { type: "forgot", identifier: email, isSignup: false });
     }
 
-    // OTP verified — allow password reset
     await Otp.deleteOne({ _id: record._id });
     req.session.resetVerified = true;
 
@@ -216,13 +209,11 @@ router.post("/reset-password", async (req, res, next) => {
   try {
     const { email, newPassword, confirmPassword } = req.body;
 
-    // Check if user is verified via OTP
     if (!req.session.resetVerified) {
       req.flash("error", "Unauthorized access, please try again");
       return res.redirect("/forgot-password");
     }
 
-    // Check if passwords match
     if (newPassword !== confirmPassword) {
       req.flash("error", "Passwords do not match");
       return res.render("users/reset-password", { email });
@@ -234,11 +225,9 @@ router.post("/reset-password", async (req, res, next) => {
       return res.redirect("/forgot-password");
     }
 
-    // Set new password and save
     await user.setPassword(newPassword);
     await user.save();
 
-    // Clean session
     delete req.session.forgotEmail;
     delete req.session.resetVerified;
 
