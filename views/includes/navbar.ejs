@@ -58,6 +58,22 @@ body.dark-mode #suggestionBoxMobile li {
   box-shadow: 0 6px 18px rgba(254,66,77,0.4);
   color: white !important;
 }
+
+.user-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff0f0;
+  border-radius: 50px;
+  padding: 5px 14px;
+  font-size: 0.875rem;
+  color: #fe424d;
+  font-weight: 700;
+}
+
+body.dark-mode .user-badge {
+  background: #2a1a1a;
+}
 </style>
 
 <nav class="navbar navbar-expand-md bg-body-tertiary border-bottom sticky-top">
@@ -72,6 +88,8 @@ body.dark-mode #suggestionBoxMobile li {
     </div>
 
     <!-- CENTER — SEARCH (Desktop) -->
+    <% const hiddenRoutes = ["/login", "/signup"]; %>
+    <% if(!hiddenRoutes.includes(currentPath)){ %>
     <div class="search-wrapper d-none d-md-flex flex-grow-1 justify-content-center px-3">
       <form action="/listings/search" method="GET" class="d-flex gap-2 w-100" style="max-width: 400px;">
         <div style="position: relative; width: 100%;">
@@ -105,6 +123,7 @@ body.dark-mode #suggestionBoxMobile li {
         </button>
       </form>
     </div>
+    <% } %>
 
     <!-- TOGGLE (Mobile) -->
     <button class="navbar-toggler ms-auto" type="button"
@@ -123,7 +142,11 @@ body.dark-mode #suggestionBoxMobile li {
         <% } %>
 
         <% if(currUser){ %>
-          <!-- ADD PROPERTY BUTTON -->
+          <span class="user-badge">
+            <i class="fa-solid fa-circle-user"></i>
+            <%= currUser.username %>
+          </span>
+
           <a class="nav-link add-property-btn"
              href="/listings/new"
              data-bs-toggle="tooltip"
@@ -141,12 +164,13 @@ body.dark-mode #suggestionBoxMobile li {
           <a class="nav-link" href="/logout"><b>Log out</b></a>
         <% } %>
 
-        <!-- DARK MODE -->
+        <!-- Dark Mode Toggle -->
         <button id="darkModeToggle" class="nav-link border-0 bg-transparent">
           <i class="fa-solid fa-moon"></i>
         </button>
 
-        <!-- MOBILE SEARCH -->
+        <!-- Mobile Search -->
+        <% if(!hiddenRoutes.includes(currentPath)){ %>
         <div class="d-md-none mt-2 mb-2">
           <form action="/listings/search" method="GET" class="d-flex gap-2">
             <div style="position: relative; width: 100%;">
@@ -179,6 +203,7 @@ body.dark-mode #suggestionBoxMobile li {
             </button>
           </form>
         </div>
+        <% } %>
 
       </div>
     </div>

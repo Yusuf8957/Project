@@ -1,0 +1,122 @@
+<% layout("layouts/boilerplate") %>
+
+<style>
+  .otp-card {
+    border: none;
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px rgba(254,66,77,0.12);
+  }
+
+  .otp-btn-email {
+    border: 2px solid #fe424d;
+    border-radius: 1rem;
+    background: white;
+    text-align: left;
+    transition: all 0.2s;
+  }
+
+  .otp-btn-email:hover {
+    background: #fff0f0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(254,66,77,0.15);
+  }
+
+  .otp-btn-phone {
+    border: 2px solid #ddd;
+    border-radius: 1rem;
+    background: #f9f9f9;
+    text-align: left;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  body.dark-mode .otp-card {
+    background: #1e1e1e;
+  }
+
+  body.dark-mode .otp-btn-email {
+    background: #2a1a1a;
+  }
+
+  body.dark-mode .otp-btn-phone {
+    background: #1a1a1a;
+  }
+</style>
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height:80vh;">
+  <div class="card p-4 otp-card" style="width:100%; max-width:440px;">
+
+    <!-- Header -->
+    <div class="text-center mb-4">
+      <i class="fa-solid fa-shield-halved fa-3x mb-3" style="color:#fe424d;"></i>
+      <h4 class="fw-bold mb-1">Verify Your Identity</h4>
+      <p class="text-muted small">Choose where to receive your OTP</p>
+    </div>
+
+    <!-- Flash Messages -->
+    <% if(error && error.length > 0){ %>
+      <div class="alert alert-danger rounded-3 small"><%= error %></div>
+    <% } %>
+
+    <form action="/send-otp" method="POST">
+
+      <!-- Email Option — Always Available -->
+      <button
+        type="submit"
+        name="type"
+        value="email"
+        class="btn w-100 mb-3 d-flex align-items-center gap-3 p-3 otp-btn-email"
+      >
+        <div class="d-flex align-items-center justify-content-center rounded-circle"
+          style="width:42px; height:42px; background:#fff0f0; flex-shrink:0;">
+          <i class="fa-solid fa-envelope" style="color:#fe424d;"></i>
+        </div>
+        <div class="flex-grow-1">
+          <div class="fw-bold" style="color:#fe424d;">Send OTP to Email</div>
+          <div class="text-muted small"><%= email %></div>
+        </div>
+        <i class="fa-solid fa-chevron-right" style="color:#fe424d;"></i>
+      </button>
+
+      <!-- Phone Option — Disabled (Upgrade Required) -->
+      <% if(phone){ %>
+        <div class="position-relative mb-1">
+          <div class="btn w-100 d-flex align-items-center gap-3 p-3 otp-btn-phone">
+            <div class="d-flex align-items-center justify-content-center rounded-circle"
+              style="width:42px; height:42px; background:#f0f0f0; flex-shrink:0;">
+              <i class="fa-solid fa-mobile-screen" style="color:#aaa;"></i>
+            </div>
+            <div class="flex-grow-1">
+              <div class="fw-bold text-muted">Send OTP to Phone</div>
+              <div class="text-muted small"><%= phone %></div>
+            </div>
+            <span class="badge"
+              style="background:#fe424d; font-size:10px; border-radius:50px; white-space:nowrap;">
+              Upgrade Required
+            </span>
+          </div>
+        </div>
+        <div class="text-center mb-3" style="font-size:11px; color:#aaa;">
+          <i class="fa-solid fa-lock me-1"></i>
+          SMS OTP requires Twilio paid plan
+        </div>
+      <% } %>
+
+    </form>
+
+    <!-- Divider -->
+    <div class="d-flex align-items-center gap-2 my-2">
+      <div style="flex:1; height:1px; background:#eee;"></div>
+      <small class="text-muted">or</small>
+      <div style="flex:1; height:1px; background:#eee;"></div>
+    </div>
+
+    <!-- Back to Login -->
+    <div class="text-center mt-2">
+      <a href="/login" class="text-muted small">
+        <i class="fa-solid fa-arrow-left me-1"></i>Back to Login
+      </a>
+    </div>
+
+  </div>
+</div>

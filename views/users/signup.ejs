@@ -1,25 +1,347 @@
-<% layout("/layouts/boilerplate")%>
+<% layout("layouts/boilerplate") %>
 
-<div class="row mt-3">
-    <h1 class="col-6 offset-3">SignUp on Wanderlust</h1>
-<div class="col-8 offset-3">
-    <form action="/signup" method="POST" class="needs-validation" novalidate>
-            <div class="mb-3">
-            <label for="username" class="form-label"> Username </label>
-            <input name="username" id="username" type="text" class="form-control" required/>
-            <div class="valid-feedback"> Looks Good! </div>
+<style>
+  .signup-card {
+    border: none;
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px rgba(254,66,77,0.12);
+  }
+
+  .input-group-text {
+    background: #fff0f0;
+    border-color: #ffd0d3;
+    color: #fe424d;
+  }
+
+  .form-control:focus {
+    border-color: #fe424d;
+    box-shadow: 0 0 0 0.2rem rgba(254,66,77,0.15);
+  }
+
+  .rule-item {
+    transition: color 0.2s, font-weight 0.2s;
+  }
+
+  .rule-pass {
+    color: #28a745 !important;
+    font-weight: 600;
+  }
+
+  /* Role selection cards */
+  .role-card {
+    border: 2px solid #ffd0d3;
+    border-radius: 1rem;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    background: white;
+  }
+
+  .role-card:hover {
+    border-color: #fe424d;
+    background: #fff0f0;
+  }
+
+  .role-card.selected {
+    border-color: #fe424d;
+    background: #fff0f0;
+    box-shadow: 0 4px 16px rgba(254,66,77,0.2);
+  }
+
+  .role-card i {
+    font-size: 2rem;
+    color: #fe424d;
+    margin-bottom: 8px;
+  }
+
+  .role-card .role-title {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #222;
+  }
+
+  .role-card .role-desc {
+    font-size: 0.78rem;
+    color: #888;
+    margin-top: 4px;
+  }
+
+  body.dark-mode .role-card {
+    background: #1e1e1e;
+    border-color: #444;
+  }
+
+  body.dark-mode .role-card.selected {
+    background: #2a1a1a;
+    border-color: #fe424d;
+  }
+
+  body.dark-mode .role-card .role-title {
+    color: #f0f0f0;
+  }
+</style>
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height:85vh;">
+  <div class="card p-4 signup-card" style="width:100%; max-width:480px;">
+
+    <!-- Header -->
+    <div class="text-center mb-4">
+      <i class="fa-solid fa-user-plus fa-2x mb-2" style="color:#fe424d;"></i>
+      <h4 class="fw-bold mb-1">Create Account</h4>
+      <p class="text-muted small">Join Wanderlust today</p>
+    </div>
+
+    <!-- Flash Error -->
+    <% if(error && error.length > 0){ %>
+      <div class="alert alert-danger rounded-3 small"><%= error %></div>
+    <% } %>
+
+    <form action="/signup" method="POST" id="signupForm">
+
+      <!-- Role Selection -->
+      <div class="mb-4">
+        <label class="form-label fw-semibold">I am joining as a:</label>
+        <div class="row g-3">
+
+          <!-- Traveller -->
+          <div class="col-6">
+            <div class="role-card selected" id="card-traveller" onclick="selectRole('traveller')">
+              <i class="fa-solid fa-person-walking-luggage"></i>
+              <div class="role-title">Traveller</div>
+              <div class="role-desc">Explore & book stays around the world</div>
+            </div>
+          </div>
+
+          <!-- Owner -->
+          <div class="col-6">
+            <div class="role-card" id="card-owner" onclick="selectRole('owner')">
+              <i class="fa-solid fa-house-chimney"></i>
+              <div class="role-title">Owner</div>
+              <div class="role-desc">List your property & host guests</div>
+            </div>
+          </div>
+
         </div>
-  <div class="mb-3">
-            <label for="email" class="form-label"> Email </label>
-            <input name="email" id="username" type="email" class="form-control" required/>
-          
+        <!-- Hidden input to send role value -->
+        <input type="hidden" name="role" id="roleInput" value="traveller" />
+      </div>
+
+      <!-- Username -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Username</label>
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="fa-solid fa-user"></i>
+          </span>
+          <input
+            type="text"
+            name="username"
+            class="form-control"
+            placeholder="Enter your username"
+            required
+          />
         </div>
-         <div class="mb-3">
-            <label for="password" class="form-label"> Password </label>
-            <input name="password" id="password" type="password" class="form-control" required/>
-            <div class="valid-feedback"> Looks Good! </div>
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Email Address</label>
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="fa-solid fa-envelope"></i>
+          </span>
+          <input
+            type="email"
+            name="email"
+            class="form-control"
+            placeholder="Enter your email"
+            required
+          />
         </div>
-        <button class="btn btn-success">SignUp</button>
+      </div>
+
+      <!-- Phone (Optional) -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">
+          Phone Number
+          <span class="text-muted fw-normal">(Optional)</span>
+        </label>
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="fa-solid fa-mobile-screen"></i>
+          </span>
+          <input
+            type="tel"
+            name="phone"
+            class="form-control"
+            placeholder="+919876543210"
+          />
+        </div>
+        <div class="form-text">
+          Format: +91XXXXXXXXXX — required for SMS OTP login
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-2">
+        <label class="form-label fw-semibold">Password</label>
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="fa-solid fa-lock"></i>
+          </span>
+          <input
+            type="password"
+            name="password"
+            id="passwordInput"
+            class="form-control"
+            placeholder="Enter your password"
+            required
+          />
+          <button
+            class="btn"
+            type="button"
+            onclick="togglePassword()"
+            style="border:1px solid #ffd0d3; background:#fff0f0; color:#fe424d;"
+          >
+            <i class="fa-solid fa-eye" id="eyeIcon"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Password Strength Bar -->
+      <div id="strengthBox" style="display:none;" class="mb-2">
+        <div class="progress" style="height:6px; border-radius:10px;">
+          <div
+            id="strengthBar"
+            class="progress-bar"
+            style="width:0%; transition:width 0.3s, background 0.3s;"
+          ></div>
+        </div>
+        <small id="strengthText" class="d-block mt-1 fw-semibold"></small>
+      </div>
+
+      <!-- Password Rules -->
+      <div class="mb-4 p-2 rounded-3" style="background:#fff8f8; font-size:12px;">
+        <div class="fw-semibold mb-1" style="color:#fe424d;">
+          <i class="fa-solid fa-circle-info me-1"></i>Password must have:
+        </div>
+        <ul class="mb-0 ps-3">
+          <li class="rule-item" id="rule-len">At least 8 characters</li>
+          <li class="rule-item" id="rule-upper">1 Uppercase letter (A-Z)</li>
+          <li class="rule-item" id="rule-lower">1 Lowercase letter (a-z)</li>
+          <li class="rule-item" id="rule-num">1 Number (0-9)</li>
+          <li class="rule-item" id="rule-special">1 Special character (@$!%*?&#^)</li>
+        </ul>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        id="submitBtn"
+        class="btn w-100 py-2 fw-bold"
+        style="background:linear-gradient(135deg,#fe424d,#ff6b6b); color:white; border-radius:50px; border:none;"
+      >
+        Create Account 🚀
+      </button>
+
     </form>
+
+    <!-- Login Link -->
+    <div class="text-center mt-3">
+      <p class="text-muted small mb-0">
+        Already have an account?
+        <a href="/login" style="color:#fe424d; font-weight:600;">Log in</a>
+      </p>
     </div>
-    </div>
+
+  </div>
+</div>
+
+<script>
+  // Role selection
+  function selectRole(role) {
+    document.getElementById("roleInput").value = role;
+
+    // Reset both cards
+    document.getElementById("card-traveller").classList.remove("selected");
+    document.getElementById("card-owner").classList.remove("selected");
+
+    // Highlight selected card
+    document.getElementById("card-" + role).classList.add("selected");
+  }
+
+  // Toggle password visibility
+  function togglePassword() {
+    const input = document.getElementById("passwordInput");
+    const icon = document.getElementById("eyeIcon");
+    if (input.type === "password") {
+      input.type = "text";
+      icon.classList.replace("fa-eye", "fa-eye-slash");
+    } else {
+      input.type = "password";
+      icon.classList.replace("fa-eye-slash", "fa-eye");
+    }
+  }
+
+  // Password strength checker
+  document.getElementById("passwordInput").addEventListener("input", function () {
+    const val = this.value;
+    const strengthBox = document.getElementById("strengthBox");
+    const strengthBar = document.getElementById("strengthBar");
+    const strengthText = document.getElementById("strengthText");
+    const submitBtn = document.getElementById("submitBtn");
+
+    strengthBox.style.display = val.length > 0 ? "block" : "none";
+
+    // Check each rule
+    const rules = {
+      "rule-len":     val.length >= 8,
+      "rule-upper":   /[A-Z]/.test(val),
+      "rule-lower":   /[a-z]/.test(val),
+      "rule-num":     /\d/.test(val),
+      "rule-special": /[@$!%*?&#^]/.test(val),
+    };
+
+    // Update rule colors
+    Object.entries(rules).forEach(([id, passed]) => {
+      const el = document.getElementById(id);
+      if (passed) {
+        el.classList.add("rule-pass");
+      } else {
+        el.classList.remove("rule-pass");
+      }
+    });
+
+    // Calculate score
+    const score = Object.values(rules).filter(Boolean).length;
+
+    // Strength bar colors and labels
+    const colors = {
+      1: "#ff4d4d",
+      2: "#ff7043",
+      3: "#ffa500",
+      4: "#7cb342",
+      5: "#28a745",
+    };
+
+    const labels = {
+      1: "Very Weak",
+      2: "Weak",
+      3: "Fair",
+      4: "Strong",
+      5: "Very Strong",
+    };
+
+    strengthBar.style.width = (score * 20) + "%";
+    strengthBar.style.background = colors[score] || "#ff4d4d";
+    strengthText.textContent = labels[score] || "";
+    strengthText.style.color = colors[score] || "#ff4d4d";
+
+    // Disable submit if password is weak
+    const allPassed = Object.values(rules).every(Boolean);
+    submitBtn.disabled = !allPassed;
+    submitBtn.style.opacity = allPassed ? "1" : "0.6";
+    submitBtn.style.cursor = allPassed ? "pointer" : "not-allowed";
+  });
+</script>

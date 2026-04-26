@@ -5,15 +5,13 @@
 
   <div class="col-8 offset-3">
 
-    <!-- ✅ Query message directly render hoga bina refresh ke -->
     <% if(locals.message){ %>
       <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        ⚠️ <%= message %>
+         <%= message %>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
       </div>
     <% } %>
 
-    <!-- Normal flash errors bhi rahenge -->
     <% if(locals.error && error.length > 0){ %>
       <div class="alert alert-danger alert-dismissible fade show" role="alert">
         ⚠️ <%= error %>
@@ -38,6 +36,7 @@
     </form>
 
     <br/>
+    <p><a href="/forgot-password" class="text-danger">Forgot Password?</a></p>
     <p>New here? <a href="/signup">Sign up</a></p>
 
   </div>

@@ -7,6 +7,23 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  phone: {
+    type: String,
+    default: null,
+  },
+  role: {
+    type: String,
+    enum: ["traveller", "owner"],
+    default: "traveller",
+  },
+  isEmailVerified: {
+    type: Boolean,
+    default: false,
+  },
+  isPhoneVerified: {
+    type: Boolean,
+    default: false,
+  },
   wishlist: [
     {
       type: Schema.Types.ObjectId,
